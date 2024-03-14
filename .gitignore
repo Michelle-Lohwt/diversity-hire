@@ -1,0 +1,13 @@
+django/venv
+django/*/__pycache__
+django/apps/*/__pycache__
+django/apps/*/migrations
+django/db.sqlite3
+
+
+# For teams
+django/.env.local
+
+# Extra
+extra/
+email.txt

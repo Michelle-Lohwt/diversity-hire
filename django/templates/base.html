@@ -1,0 +1,22 @@
+{% load static tailwind_tags %}
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="max-age=604800" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Diversity Hire</title>
+    {% tailwind_css %}
+    <link rel='stylesheet' type='text/css' href="{% static 'css/main.css' %}">
+  </head>
+  <body class="flex flex-col min-h-screen">
+
+  <main className='bg-white'>
+    {% comment %} <img src="{% static 'images/img.png' %}"> {% endcomment %}
+    {% block content %}
+    <!---content-->
+    {% endblock %}
+  </main>
+  {% include 'common/footer.html' %}
+  </body>
