@@ -9,5 +9,6 @@ django/db.sqlite3
 django/.env.local
 
 # Extra
-extra/
+extra/datasets
+extra/working
 email.txt

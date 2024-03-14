@@ -1,0 +1,4 @@
+user,gender,phone_number,date_of_birth,candidate_summary,linkedIn_URL
+candidate_1,Male,12345678,2024-03-13,Candidate Alpha (testing),https://www.linkedin.com
+candidate_2,Female,12345678,2024-03-13,Candidate Beta (testing),https://www.linkedin.com
+candidate_3,Male,12345678,2024-03-13,Candidate Gamma (testing),https://www.linkedin.com

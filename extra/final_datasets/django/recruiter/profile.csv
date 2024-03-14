@@ -1,0 +1,4 @@
+user,gender,contact_number,date_of_birth,recruiter_title,recruiter_summary,linkedIn_URL
+recruiter_1,Male,12345678,2024-03-13,Talent Acquisition Alpha,Talent Acquisition Alpha,https://www.linkedin.com
+recruiter_2,Female,12345678,2024-03-13,Human Resource Beta,Human Resource Beta,https://www.linkedin.com
+recruiter_3,Male,12345678,2024-03-13,Senior HR Gamma,Senior HR Gamma,https://www.linkedin.com
