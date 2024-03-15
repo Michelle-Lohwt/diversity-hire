@@ -5,18 +5,18 @@
 <header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10">
   <div class="mx-auto flex w-full max-w-full items-center justify-between px-4 sm:px-6 lg:px-8">
     <div class="flex flex-1 items-center gap-x-6">
-      <button type="button" class="-m-3 p-3 md:hidden">
+      {% comment %} <button type="button" class="-m-3 p-3 md:hidden">
         <span class="sr-only">Open main menu</span>
         <svg class="h-5 w-5 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10zm0 5.25a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
         </svg>
-      </button>
-      <a href="/recruiter/dashboard">
+      </button> {% endcomment %}
+      <a href="{% url 'recruiter-dashboard' recruiter.id %}">
         <img class="h-8 w-auto" src="{% static 'images/logo.png' %}" alt="Diversity Hire">
       </a>
     </div>
     <nav class="hidden md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
-      <a href="/recruiter/dashboard" class="border-indigo-500 text-indigo-600 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium" aria-current="page">Dashboard</a>
+      <a href="{% url 'recruiter-dashboard' recruiter.id %}" class="border-indigo-500 text-indigo-600 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium" aria-current="page">Dashboard</a>
       <a href="/recruiter/jobs" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Jobs</a>
       <a href="/recruiter/candidates" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Candidates</a>
     </nav>
@@ -36,6 +36,33 @@
       </a>
     </div>
   </div>
+{% comment %} 
+  <!-- Mobile menu, show/hide based on menu open state. -->
+  <div class="lg:hidden" role="dialog" aria-modal="true">
+    <!-- Background backdrop, show/hide based on slide-over state. -->
+    <div class="fixed inset-0 z-50"></div>
+    <div class="fixed inset-y-0 left-0 z-50 w-full overflow-y-auto bg-white px-4 pb-6 sm:max-w-sm sm:px-6 sm:ring-1 sm:ring-gray-900/10">
+      <div class="-ml-0.5 flex h-16 items-center gap-x-6">
+        <button type="button" class="-m-2.5 p-2.5 text-gray-700">
+          <span class="sr-only">Close menu</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div class="-ml-0.5">
+          <a href="#" class="-m-1.5 block p-1.5">
+            <span class="sr-only">Diversity Hire</span>
+            <img class="h-8 w-auto" src="{% static 'images/logo.png' %}" alt="Diversity Hire">
+          </a>
+        </div>
+      </div>
+      <div class="mt-2 space-y-2">
+        <a href="{% url 'recruiter-dashboard' recruiter.id %}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Dashboard</a>
+        <a href="/recruiter/jobs" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Jobs</a>
+        <a href="/recruiter/candidates" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Candidates</a>
+      </div>
+    </div>
+  </div> {% endcomment %}
 </header>
 
 {%endblock%}

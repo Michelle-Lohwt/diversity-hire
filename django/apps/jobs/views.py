@@ -16,3 +16,6 @@ def jobs(request):
     page_obj = p.page(p.num_pages)
     
   return render(request, 'jobs/all_jobs.html', {'page_obj': page_obj})
+
+def create_job(request):
+  pass

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'django_extensions',
+    'django_filters',
+    'rest_framework',
     
     'apps.accounts',
     'apps.jobs',
