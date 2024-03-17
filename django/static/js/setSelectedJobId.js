@@ -10,6 +10,7 @@ async function setSelectedJobId(jobId) {
     document.getElementById('selected_job_company').textContent = data.company
     document.getElementById('selected_job_title').textContent = data.title
     document.getElementById('selected_job_location').textContent = data.location
+    document.getElementById('selected_job_status').textContent = data.status
     
     // Qualifications
     const qualificationsContainer = document.getElementById('qualifications')

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{%block content%}
+{% block content %}
 <script src="{% static 'js/setSelectedJobId.js' %}"></script>
 
 <!--navbar--> 
@@ -72,7 +72,7 @@
               </div>
               <div class="flex-none self-end px-6 pt-4">
                 <dt class="sr-only">Status</dt>
-                <dd class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">Open</dd>
+                <dd class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20" id="selected_job_status">{{selected_job_obj.status}}</dd>
               </div>
               <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
                 <dt class="flex-none">
@@ -120,8 +120,7 @@
               </div>
             </dl>
             <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
-              <a href="{% url 'recruiter-jobs' recruiter.id selected_job_obj.pk %}" class="text-sm font-semibold leading-6 text-gray-900" id='selected_job_link'>More details <span aria-hidden="true">&rarr;</span></a>
-              {% comment %} <a href="#" class="text-sm font-semibold leading-6 text-gray-900" id='selected_job_link'>{{selected_job_obj.id}}<span aria-hidden="true">&rarr;</span></a> {% endcomment %}
+              <a href="{% url 'recruiter-jobs' request.user.id selected_job_obj.id %}" class="text-sm font-semibold leading-6 text-gray-900" id='selected_job_link'>More details <span aria-hidden="true">&rarr;</span></a>
             </div>
           </div>
         </div>
@@ -134,7 +133,7 @@
               <p class="mt-2 text-sm text-gray-700">A list of jobs under {{recruiter.user.name}}.</p>
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-              <a href="#" class="ml-auto flex items-center gap-x-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <a href="{% url 'create-job' request.user.id %}" class="ml-auto flex items-center gap-x-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <svg class="-ml-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
                 </svg>
@@ -205,7 +204,7 @@
                         <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">2</td>
                         <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">1</td>
                         <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, AAPS0L</span></a>
+                          <a href="{% url 'update-job' request.user.id job.id %}" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, AAPS0L</span></a>
                         </td>
                         {% comment %} ToDo(medium): select job to close https://tailwindui.com/components/application-ui/lists/tables {% endcomment %}
                         <td class="relative px-7 sm:w-12 sm:px-6">

@@ -31,6 +31,8 @@ def recruiter_dashboard(request, pk):
   selected_job_obj = page_job[0]
   applications = JobApplication.objects.all()
   
+  request.user.id = pk
+  request.session['job_id'] = selected_job_obj.pk
   total_jobs = jobs.count()
   
   # total_applications = applications.count()
@@ -49,13 +51,17 @@ def recruiter_dashboard(request, pk):
   }
   return render(request, 'accounts/recruiter/dashboard.html', context)
 
-def recruiter_jobs(request, pk, job_id):
-  print('**********')
-  print(pk),
-  print(job_id)
-  print('**********')
-  return HttpResponse("Done")
-  # return render(request, 'accounts/recruiter/dashboard.html')
+def recruiter_jobs(request, pk, job_id = None):
+  recruiter = Recruiter.objects.get(id=pk)
+  request.user.id = pk
+  jobs = Job.objects.filter(created_by = recruiter)
+  
+  # if job_id == None:
+  #   jobs = jobs.first()
+  # else:
+  #   jobs = jobs.filter(job_id)
+  
+  return render(request, 'accounts/recruiter/jobs.html')
 
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
@@ -88,6 +94,7 @@ def get_job_details(request, job_id):
           'title': job.title,
           'company': job.company.company_name,
           'location': job.location,
+          'status': job.status,
           'qualifications': q_list,
           'skills': s_list
         }

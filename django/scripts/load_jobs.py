@@ -33,9 +33,6 @@ def run():
   jobs_required_skills = pd.read_csv('C:/Users/WT/OneDrive/Desktop/GitHub/projects/diversity-hire/extra/final_datasets/django/jobs/job_required_skills.csv')
   companies = pd.read_csv('C:/Users/WT/OneDrive/Desktop/GitHub/projects/diversity-hire/extra/final_datasets/django/company.csv')
   
-  print(jobs_required_skills.columns)
-  print(jobs_required_qualifications.columns)
-  
   q1 = jobs.iloc[:5679]
   q2 = jobs.iloc[5679:11358]
   q3 = jobs.iloc[11358:]

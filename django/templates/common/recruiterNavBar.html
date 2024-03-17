@@ -2,7 +2,7 @@
 
 {%block content%}
 
-<header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10">
+<header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10 bg-white">
   <div class="mx-auto flex w-full max-w-full items-center justify-between px-4 sm:px-6 lg:px-8">
     <div class="flex flex-1 items-center gap-x-6">
       {% comment %} <button type="button" class="-m-3 p-3 md:hidden">
@@ -11,13 +11,13 @@
           <path fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10zm0 5.25a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
         </svg>
       </button> {% endcomment %}
-      <a href="{% url 'recruiter-dashboard' recruiter.id %}">
+      <a href="{% url 'recruiter-dashboard' request.user.id %}">
         <img class="h-8 w-auto" src="{% static 'images/logo.png' %}" alt="Diversity Hire">
       </a>
     </div>
     <nav class="hidden md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
-      <a href="{% url 'recruiter-dashboard' recruiter.id %}" class="border-indigo-500 text-indigo-600 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium" aria-current="page">Dashboard</a>
-      <a href="/recruiter/jobs" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Jobs</a>
+      <a href="{% url 'recruiter-dashboard' request.user.id %}" class="border-indigo-500 text-indigo-600 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium" aria-current="page">Dashboard</a>
+      <a href="{% url 'recruiter-jobs' request.user.id request.session.job_id %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Jobs</a>
       <a href="/recruiter/candidates" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Candidates</a>
     </nav>
     

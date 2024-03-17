@@ -35,8 +35,8 @@ class Job(models.Model):
   title = models.CharField(max_length=255, null=True)
   description = models.TextField(null=True)
   location = models.CharField(max_length=255, null=True)
-  last_date = models.DateTimeField(default=return_date_time)
-  status = models.CharField(max_length = 10, choices = JOB_STATUS, default=JOB_STATUS[0])
+  closing_date = models.DateField(default=return_date_time)
+  status = models.CharField(max_length = 10, choices = JOB_STATUS, default=JOB_STATUS[0][0])
   
   job_type = models.CharField(
       max_length=15, choices=JobType.choices, default=JobType.Full_Time
