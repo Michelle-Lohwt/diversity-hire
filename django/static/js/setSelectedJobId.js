@@ -10,7 +10,14 @@ async function setSelectedJobId(jobId) {
     document.getElementById('selected_job_company').textContent = data.company
     document.getElementById('selected_job_title').textContent = data.title
     document.getElementById('selected_job_location').textContent = data.location
-    document.getElementById('selected_job_status').textContent = data.status
+
+    job_status = document.getElementById('selected_job_status')
+    job_status.textContent = data.status
+    if (data.status === "Open"){
+      job_status.className = "rounded-md px-2 py-1 text-xs font-medium bg-green-50 text-green-600 ring-1 ring-inset ring-green-600/20"
+    }else{
+      job_status.className = "rounded-md px-2 py-1 text-xs font-medium bg-red-50 text-red-600"
+    }
     
     // Qualifications
     const qualificationsContainer = document.getElementById('qualifications')

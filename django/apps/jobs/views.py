@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from ..accounts.models import Recruiter
 from .models import Job
 from .forms import JobForm
@@ -47,7 +48,11 @@ def update_job(request, pk, job_id):
   request.user.id = pk
   
   job = Job.objects.get(id=job_id)
+  request.session['job_id'] = job_id
+  
   form = JobForm(instance=job)
+  change_job_status = True
+  job_status = job.status
   
   if request.method == 'POST':
     form = JobForm(request.POST, instance=job)
@@ -57,8 +62,14 @@ def update_job(request, pk, job_id):
       form.save()
       return redirect('/recruiter/' + pk + '/dashboard/')
   
-  context = {'form': form}
+  context = {'form': form, 'change_job_status': change_job_status, 'job_status': job_status}
   return render(request, 'jobs/job_form.html', context)
 
-def close_job(request, pk, job_id):
-  pass
+def change_job_status(request, job_id):
+  job = Job.objects.get(id=job_id)
+  if job.status == 'Open':
+    job.status = "Close"
+  else:
+    job.status = "Open"
+  job.save()
+  return HttpResponse(status=200)
