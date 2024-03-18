@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import Recruiter
 from ..jobs.models import Job, JobApplication
+from ..jobs.filters import JobFilter
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
@@ -17,8 +18,13 @@ def recruiter_dashboard(request, pk):
   recruiter = Recruiter.objects.get(id=pk)
   jobs = Job.objects.filter(created_by = recruiter)
   
+  query_dict = request.GET
+  filtered_dict = {key: value for key, value in query_dict.items() if value}
+  filter = JobFilter(filtered_dict, queryset=jobs)
+  jobs = filter.qs
+  
   p = Paginator(jobs, 10)
-  page_number = request.GET.get('page')
+  page_number = request.GET.get('page', 1)
   
   try:
     page_job = p.get_page(page_number)
@@ -27,12 +33,18 @@ def recruiter_dashboard(request, pk):
   except EmptyPage:
     page_job = p.page(p.num_pages)
     
+  # selected_job_obj = page_job[0]
+  if not jobs:
+    selected_job_obj = None
+    select = False
+  else:
+    selected_job_obj = jobs[0]
+    select = True
     
-  selected_job_obj = page_job[0]
   applications = JobApplication.objects.all()
   
   request.user.id = pk
-  request.session['job_id'] = selected_job_obj.pk
+  # request.session['job_id'] = selected_job_obj.pk
   total_jobs = jobs.count()
   
   # total_applications = applications.count()
@@ -45,6 +57,9 @@ def recruiter_dashboard(request, pk):
   context = {
     'recruiter': recruiter,
     'page_obj': page_job, 
+    'filter_query': filtered_dict,
+    'filter': filter,
+    'select': select,
     'selected_job_obj': selected_job_obj,
     'applications': applications,
     'total_jobs': total_jobs,
