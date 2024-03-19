@@ -1,20 +1,102 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
-from .models import Recruiter
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
+from .forms import RegistrationForm
+from .models import BaseAccount, Candidate, Recruiter
 from ..jobs.models import Job, JobApplication
 from ..jobs.filters import JobFilter
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
   return render(request, 'home.html')
 
 def register(request):
-  return render(request, 'accounts/register.html')
+  form = RegistrationForm()
+  
+  if request.method == 'POST':
+    form = RegistrationForm(request.POST)
+    
+    if form.is_valid():
+      form.save()
+      username = form.cleaned_data['username']
+      role = form.cleaned_data['role']
+      
+      user = BaseAccount.objects.get(username=username)
+      group, created = Group.objects.get_or_create(name=role)
+      if created:
+        # New group created, add user directly
+        group.user_set.add(user)
+      else:
+        # Existing group, check if user already belongs
+        if user not in group.user_set.all():
+            group.user_set.add(user)
+      # group = Group.objects.get_or_create(name=role)
+      # group.user_set.add(user)
+      
+      if role == 'Recruiter':
+        profile = Recruiter()
+        profile.user = user
+        profile.save()
+      elif role == 'Candidate':
+        profile = Candidate()
+        profile.user = user
+        profile.save()
+      
+      messages.success(request, 'Account was created for ' + role + ' ' + username)
+      return redirect('/login/')
+  
+  context = {'form': form}
+  return render(request, 'accounts/register.html', context)
 
-def login(request):
+def loginPage(request):
+  if request.method == 'POST':
+    username = request.POST['username']
+    password = request.POST['password']
+    # request.user.id = account.pk
+    print('*************')
+    print('*************')
+    print(username)
+    print(password)
+    # TODO(HIGH): login accounts that are populated from csv
+    user = authenticate(request, username = username, password = password)
+    
+    if user is not None:
+      login(request, user)
+      account = BaseAccount.objects.get(username=username)
+      role = account.role
+      
+      if role == 'Recruiter':
+        recruiter, created = Recruiter.objects.get_or_create(user=account)
+        print('************')
+        print('Recruiter' + created)
+        print('************')
+        return redirect('/recruiter/' + str(request.user.recruiter_profile.id) + '/dashboard')
+      elif role == 'Candidate':
+        candidate, created = Candidate.objects.get_or_create(user=account)
+        print('************')
+        print('Candidate' + created)
+        print('************')
+        return redirect('/candidate/' + str(request.user.candidate_profile.id) + '/dashboard')
+      
+    else:
+      messages.info(request, 'Username or Password is incorrect')
+      return render(request, 'accounts/login.html')
+    
   return render(request, 'accounts/login.html')
 
+def logoutUser(request):
+  logout(request)
+  return redirect('/logout/')
+
 def recruiter_dashboard(request, pk):
+  print('**************')
+  print('Recruiter')
+  print(pk)
+  print(request.user.recruiter_profile)
+  print(request.user.recruiter_profile.id)
+  print('**************')
   recruiter = Recruiter.objects.get(id=pk)
   jobs = Job.objects.filter(created_by = recruiter)
   
@@ -44,6 +126,7 @@ def recruiter_dashboard(request, pk):
   applications = JobApplication.objects.all()
   
   request.user.id = pk
+  # ToDo (high): change 
   # request.session['job_id'] = selected_job_obj.pk
   total_jobs = jobs.count()
   
@@ -81,7 +164,13 @@ def recruiter_jobs(request, pk, job_id = None):
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
 
-def candidate_dashboard(request):
+def candidate_dashboard(request, pk):
+  print('**************')
+  print('Candidate')
+  print(pk)
+  print(request.user.candidate_profile)
+  print(request.user.candidate_profile.id)
+  print('**************')
   return render(request, 'accounts/candidate/dashboard.html')
 
 def get_job_details(request, job_id):

@@ -11,7 +11,8 @@ COMPANY = 'Company'
 RECRUITER = 'Recruiter'
 CANDIDATE = 'Candidate'
 
-ROLES = [(ADMIN, 'Admin'), (COMPANY, 'Company'), (RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
+ROLES = [(RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
+# ROLES = [(ADMIN, 'Admin'), (COMPANY, 'Company'), (RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
 GENDER = (("Male", "Male"), ("Female", "Female"))
 
 # Account
@@ -108,12 +109,12 @@ class Candidate(models.Model):
   # Define fields for first name, last name, gender, phone number, and date of birth
   gender = models.CharField(verbose_name="gender", max_length=10, choices=GENDER)
   phone_number = models.CharField(verbose_name="phone number", max_length=255, null=True)
-  date_of_birth = models.DateField(verbose_name="date of birth")
+  date_of_birth = models.DateField(verbose_name="date of birth", null=True)
 
-  candidate_summary = models.TextField()
-  linkedIn_URL = models.URLField()
-  insta_URL = models.URLField()
-  other_social_media_URL = models.URLField()
+  candidate_summary = models.TextField(null=True)
+  linkedIn_URL = models.URLField(null=True)
+  insta_URL = models.URLField(null=True)
+  other_social_media_URL = models.URLField(null=True)
   
   def __str__(self):
     return self.user.name
@@ -151,7 +152,7 @@ class Recruiter(models.Model):
   date_of_birth = models.DateField(verbose_name="date of birth", null=True)
 
   recruiter_title = models.CharField(max_length=255, null=False,)
-  recruiter_summary = models.TextField()
+  recruiter_summary = models.TextField(null=True)
   linkedIn_URL = models.URLField(null=True)
   
   def __str__(self):

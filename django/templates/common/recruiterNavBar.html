@@ -15,11 +15,11 @@
         <img class="h-8 w-auto" src="{% static 'images/logo.png' %}" alt="Diversity Hire">
       </a>
     </div>
-    <nav class="hidden md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
+    {% comment %} <nav class="hidden md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
       <a href="{% url 'recruiter-dashboard' request.user.id %}" class="border-indigo-500 text-indigo-600 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium" aria-current="page">Dashboard</a>
       <a href="{% url 'recruiter-jobs' request.user.id request.session.job_id %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Jobs</a>
       <a href="/recruiter/candidates" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium">Candidates</a>
-    </nav>
+    </nav> {% endcomment %}
     
     <div class="flex flex-1 items-center justify-end gap-x-8">
       <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'rest_framework',
+    'import_export',
     
     'apps.accounts',
     'apps.jobs',
