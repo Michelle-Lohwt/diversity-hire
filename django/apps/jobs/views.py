@@ -5,6 +5,7 @@ from .models import Job
 from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from ..accounts.decorators import allowed_users
 
 def jobs(request):
   jobs = Job.objects.all()
@@ -22,6 +23,7 @@ def jobs(request):
   return render(request, 'jobs/all_jobs.html', {'page_obj': page_obj})
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
 def create_job(request):
   form = JobForm()
   
@@ -37,6 +39,7 @@ def create_job(request):
   return render(request, 'jobs/job_form.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
 def update_job(request, job_id):
   job = Job.objects.get(id=job_id)
   request.session['job_id'] = job_id

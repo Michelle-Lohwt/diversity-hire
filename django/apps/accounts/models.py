@@ -11,8 +11,7 @@ COMPANY = 'Company'
 RECRUITER = 'Recruiter'
 CANDIDATE = 'Candidate'
 
-ROLES = [(RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
-# ROLES = [(ADMIN, 'Admin'), (COMPANY, 'Company'), (RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
+ROLES = [(ADMIN, 'Admin'), (COMPANY, 'Company'), (RECRUITER, 'Recruiter'), (CANDIDATE, 'Candidate')]
 GENDER = (("Male", "Male"), ("Female", "Female"))
 
 # Account

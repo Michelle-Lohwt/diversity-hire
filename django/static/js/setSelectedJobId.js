@@ -4,7 +4,7 @@ async function setSelectedJobId(jobId) {
   .then(data => {
     const currentHref = document.getElementById('selected_job_link').href
     const splitUrl = currentHref.split('/')
-    const baseUrl = splitUrl[0] + '//' + splitUrl[2] + '/' + splitUrl[3] + '/' + splitUrl[4] + '/' + splitUrl[5] + '/'
+    const baseUrl = splitUrl[0] + '//' + splitUrl[2] + '/' + splitUrl[3] + '/' + splitUrl[4] + '/'
     document.getElementById('selected_job_link').href = baseUrl + data.id
 
     document.getElementById('selected_job_company').textContent = data.company

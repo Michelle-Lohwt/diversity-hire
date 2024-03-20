@@ -7,7 +7,6 @@ class Skill(models.Model):
   def __str__(self):
     return self.skill_name
 
-# ToDo(high): randomly generate skill data for candidate
 class CandidateSkill(models.Model):
   candidate = models.ForeignKey(
     Candidate,

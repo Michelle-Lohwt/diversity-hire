@@ -21,7 +21,7 @@ def run():
       else:
         # Existing group, check if user already belongs
         if user not in group.user_set.all():
-            group.user_set.add
+            group.user_set.add(user)
       
   with open('C:/Users/WT/OneDrive/Desktop/GitHub/projects/diversity-hire/extra/final_datasets/django/candidate/profile.csv') as file:
     reader = csv.DictReader(file)
