@@ -5,7 +5,7 @@ class JobForm(ModelForm):
   class Meta:
     model = Job
     fields = '__all__'
-    exclude = ('created_by',)
+    exclude = ('created_by', 'status',)
     
     widgets = {
       'title': TextInput(

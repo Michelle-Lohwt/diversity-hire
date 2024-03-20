@@ -4,6 +4,7 @@ from ..accounts.models import Recruiter
 from .models import Job
 from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 def jobs(request):
   jobs = Job.objects.all()
@@ -20,33 +21,23 @@ def jobs(request):
     
   return render(request, 'jobs/all_jobs.html', {'page_obj': page_obj})
 
-def create_job(request, pk):
-  # ToDo (high): remove recruiter, can login instead (check all request.user)
-  recruiter = Recruiter.objects.get(id=pk)
-  request.user = recruiter
-  # until here end----------------
-  request.user.id = pk
-  
+@login_required(login_url='login')
+def create_job(request):
   form = JobForm()
   
   if request.method == 'POST':
     form = JobForm(request.POST)
     
     if form.is_valid():
-      form.instance.created_by = request.user
+      form.instance.created_by = request.user.recruiter_profile
       form.save()
-      return redirect('/recruiter/' + pk + '/dashboard/')
+      return redirect('/recruiter/dashboard/')
   
   context = {'form': form}
   return render(request, 'jobs/job_form.html', context)
 
-def update_job(request, pk, job_id):
-  # ToDo (high): remove recruiter, can login instead (check all request.user)
-  recruiter = Recruiter.objects.get(id=pk)
-  request.user = recruiter
-  # until here end----------------
-  request.user.id = pk
-  
+@login_required(login_url='login')
+def update_job(request, job_id):
   job = Job.objects.get(id=job_id)
   request.session['job_id'] = job_id
   
@@ -58,9 +49,8 @@ def update_job(request, pk, job_id):
     form = JobForm(request.POST, instance=job)
     
     if form.is_valid():
-      # form.instance.created_by = request.user
       form.save()
-      return redirect('/recruiter/' + pk + '/dashboard/')
+      return redirect('/recruiter/dashboard/')
   
   context = {'form': form, 'change_job_status': change_job_status, 'job_status': job_status}
   return render(request, 'jobs/job_form.html', context)

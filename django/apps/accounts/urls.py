@@ -7,11 +7,11 @@ urlpatterns = [
   path('login/', views.loginPage, name='login'),
   path('logout/', views.logoutUser, name='logout'),
   
-  path('recruiter/<str:pk>/dashboard/', views.recruiter_dashboard, name='recruiter-dashboard'),
-  path('recruiter/<str:pk>/jobs/<str:job_id>', views.recruiter_jobs, name='recruiter-jobs'),
+  path('recruiter/dashboard/', views.recruiter_dashboard, name='recruiter-dashboard'),
+  path('recruiter/jobs/<str:job_id>', views.recruiter_jobs, name='recruiter-jobs'),
   # path('recruiter/candidates', views.recruiter_candidates, name='recruiter-candidates'),
   
-  path('candidate/<str:pk>/dashboard/', views.candidate_dashboard, name='candidate-dashboard'),
+  path('candidate/dashboard/', views.candidate_dashboard, name='candidate-dashboard'),
   # path('edit_profile/', views.edit_profile, name='edit_profile'),
   
   # API
