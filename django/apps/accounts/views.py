@@ -1,12 +1,16 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .decorators import unauthenticated_user, allowed_users
 from django.contrib.auth.models import Group
-from .forms import RegistrationForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+
+from .decorators import unauthenticated_user, allowed_users
+from .forms import (
+  RegistrationForm, CandidateProfileForm, RecruiterProfileForm, 
+  ExperienceFormSet, QualificationFormSet, SkillFormSet
+  )
 from .models import BaseAccount, Candidate, Recruiter
 from ..jobs.models import Job, JobApplication
 from ..jobs.filters import JobFilter
@@ -151,7 +155,81 @@ def candidate_dashboard(request):
   jobs = Job.objects.all()
   applications = request.user.candidate_profile.jobApplication_applied_by_candidate.all()
   return render(request, 'accounts/candidate/dashboard.html')
+  
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter', 'Candidate'])
+def update_profile(request):
+  if request.user.role == 'Recruiter':
+    is_recruiter = True
+    recruiter = request.user.recruiter_profile
+    profile_form = RecruiterProfileForm(instance=recruiter)
+    
+    if request.method == 'POST':
+      profile_form = RecruiterProfileForm(request.POST, instance=recruiter)
+      
+      if profile_form.is_valid():
+        profile_form.save()
+        return redirect('recruiter-dashboard')
+    
+    context = {
+      'is_recruiter': is_recruiter,
+      'form': profile_form, 
+    }
+  elif request.user.role == 'Candidate':
+    is_recruiter = False
+    candidate = request.user.candidate_profile
+    
+    profile_form = CandidateProfileForm(instance=candidate)
+    experience_form = ExperienceFormSet(instance=candidate)
+    qualification_form = QualificationFormSet(instance=candidate)
+    skill_form = SkillFormSet(instance=candidate)
+    
+    if request.method == 'POST':
+      if 'profile_sub' in request.POST:
+        profile_form = CandidateProfileForm(request.POST, instance=candidate)
+        if profile_form.is_valid():
+          profile_form.save()
+          return redirect('candidate-dashboard')
+        
+      elif 'experience_sub' in request.POST:
+        experience_form = ExperienceFormSet(request.POST, instance=candidate)
+        if experience_form.is_valid():
+          experience_form.save()
+          return redirect('candidate-dashboard')
+        
+      elif 'qualification_sub' in request.POST:
+        qualification_form = QualificationFormSet(request.POST, instance=candidate)
+        if qualification_form.is_valid():
+          qualification_form.save()
+          return redirect('candidate-dashboard')
+      
+      elif 'skill_sub' in request.POST:
+        skill_form = SkillFormSet(request.POST, instance=candidate)
+        # print('**********')
+        # print(skill_form.data)
+        # print(skill_form.errors)
+        # print('**********')
+        if skill_form.is_valid():
+          skill_form.save()
+          return redirect('candidate-dashboard')
+    
+    context = {
+      'is_recruiter': is_recruiter,
+      'form': profile_form, 
+      'experience_formset': experience_form,
+      'qualification_formset': qualification_form,
+      'skill_formset': skill_form,
+    }
+  return render(request, 'common/account_profile.html', context)
+
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['Recruiter', 'Candidate'])
+# def view_profile(request):
+#   context = {}
+#   return render(request, 'common/account_profile.html', context)
+
+# API
 def get_job_details(request, job_id):
   if request.method == 'GET':
     try:
@@ -186,3 +264,43 @@ def get_job_details(request, job_id):
       return JsonResponse({'error': 'Job not found'}, status=404)
   else:
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+  
+# class CandidateProfileInline():
+#   form_class = CandidateProfileForm
+#   model = Candidate
+#   template_name = 'common/account_profile.html'
+  
+#   def form_valid(self, form):
+#     pass
+    
+#   def formset_experience_valid(self, formset):
+#     experiences = formset.save(commit=False)
+#     for obj in formset.deleted_objects:
+#       obj.delete()
+#     for experience in experiences:
+#       experience.candidate = self.object
+#       experience.save()
+    
+# class CandidateProfileUpdate(CandidateProfileInline, UpdateView):
+#   def get_context_data(self, **kwargs):
+#     ctx = super(CandidateProfileUpdate, self).get_context_data(**kwargs)
+#     print(ctx)
+#     # ctx['named_formsets'] = self.get_named_formsets()
+#     # return ctx
+  
+#   def get_named_formsets(self):
+#     return{
+#       'experiences': ExperienceFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='experiences'),
+#     }
+    
+# def delete_experience(request, exp_id):
+#   try:
+#     exp = Experience.objects.get(id = exp_id)
+#   except Experience.DoesNotExist:
+#     messages.success(
+#       request, 'Object does not exists.'
+#     )
+#     return redirect('profiles:update_profile', pk=exp.candidate.id)
+#   exp.delete()
+#   messages.success(request, 'Experience deleted successfully')
+#   return redirect('profiles:update_profile', pk=exp.candidate.id)

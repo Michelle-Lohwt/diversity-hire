@@ -133,7 +133,8 @@ class Experience(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   modified_at = models.DateTimeField(auto_now=True)
 
-
+  def __str__(self):
+    return self.job_title
 
 # Recruiter
 class Recruiter(models.Model):
