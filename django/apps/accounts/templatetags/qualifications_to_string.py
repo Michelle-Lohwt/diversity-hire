@@ -1,15 +1,18 @@
 from django.template import Library
+from collections import defaultdict
 
 register = Library()
 
 @register.filter
 def qualifications_to_string(qualifications):
   """Concatenates qualifications with commas and removes trailing comma."""
-  q_type = qualifications.values('qualification_type').distinct()
-  q_name = qualifications.values('qualification_name').distinct()
-  
+  q_dict = defaultdict(list)
+  for q in qualifications.values():
+    q_dict[q['qualification_name']].append(q['qualification_type'])
+    
   q_list = []
-  for q in q_name:
-    q_list.append(q_type[0]['qualification_type'] + '/ ' + q_type[1]['qualification_type'] + ' in ' + q['qualification_name'])
-  
+  for name, types in q_dict.items():
+    concatenated_types = '/ '.join(types)  # Join types with comma and space
+    q_list.append(concatenated_types + ' in ' + name)
+    
   return q_list

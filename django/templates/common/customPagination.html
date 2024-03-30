@@ -11,7 +11,7 @@
   </div>
   <div class="hidden md:-mt-px md:flex">
     {% if page_obj.number > 4 %}
-      <a href="?page=1{% for fil, fil_value in filter_query.items %}{% if fil != 'page' %}&{{fil}}={{fil_value}}{% endif %}{% endfor %}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">First Page</a>
+      <a href="?page=1{% for fil, fil_value in filter_query.items %}{% if fil != 'page' %}&{{fil}}={{fil_value}}{% endif %}{% endfor %}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">First</a>
     {% endif%}
     {% for l in  page_obj.paginator.page_range %}
       {% if l <= page_obj.number|add:3 and l >= page_obj.number|add:-3 %}
@@ -27,7 +27,7 @@
       {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-      <a href="?page={{page_obj.paginator.num_pages}}{% for fil, fil_value in filter_query.items %}{% if fil != 'page' %}&{{fil}}={{fil_value}}{% endif %}{% endfor %}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Last Page</a>
+      <a href="?page={{page_obj.paginator.num_pages}}{% for fil, fil_value in filter_query.items %}{% if fil != 'page' %}&{{fil}}={{fil_value}}{% endif %}{% endfor %}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Last</a>
     {% endif%}
   </div>
   <div class="-mt-px flex w-0 flex-1 justify-end">

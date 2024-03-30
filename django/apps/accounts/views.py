@@ -12,8 +12,11 @@ from .forms import (
   ExperienceFormSet, QualificationFormSet, SkillFormSet
   )
 from .models import BaseAccount, Candidate, Recruiter
-from ..jobs.models import Job, JobApplication
+from ..jobs.models import Job, JobApplication, SkillSimilarities
 from ..jobs.filters import JobFilter
+import pandas as pd
+from gensim.models import Word2Vec
+from collections import defaultdict
 
 def home(request):
   return render(request, 'home.html')
@@ -79,7 +82,7 @@ def recruiter_dashboard(request):
   print(request.user.recruiter_profile)
   print(request.user.recruiter_profile.id)
   print('**************')
-  jobs = request.user.recruiter_profile.job_created_by_recruiter.all()
+  jobs = request.user.recruiter_profile.job_created_by_recruiter.all().order_by('-created_at')
   
   query_dict = request.GET
   filtered_dict = {key: value for key, value in query_dict.items() if value}
@@ -144,6 +147,47 @@ def recruiter_jobs(request, job_id = None):
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
 
+def calculate_skill_matching(candidate_skills, jobs):
+  skill_model = Word2Vec.load('C:/Users/WT/OneDrive/Desktop/GitHub/projects/diversity-hire/extra/final_datasets/nlp/skill_model')
+  
+  all_matching = []
+  for job in jobs:
+    job_skills = job.job_required_skills.all()
+    avg_score = 0
+    
+    for skill in candidate_skills:
+      str_skill = str(skill.skill).lower()
+      total_score = 0
+      for job_skill in job_skills:
+        str_job_skill = str(job_skill).lower()
+        score = skill_model.wv.similarity(str_skill, str_job_skill)
+        total_score += score
+      avg_score += (total_score/len(job_skills))
+    avg_score /= len(candidate_skills)
+        
+    skill_match = {'job_id': job.id, 'score': avg_score * 100}
+    all_matching.append(skill_match)
+    
+  return pd.DataFrame(all_matching)
+  # df = pd.DataFrame(all_matching).sort_values(by='score', ascending=False)
+  
+def populate_skill_matching(candidate):
+  candidate_skills = candidate.skill_belongs_to_candidate.all()
+  jobs = Job.objects.all()
+  df = calculate_skill_matching(candidate_skills, jobs)
+  for index, row in df.iterrows():
+    job = Job.objects.get(pk=row['job_id'])
+    try:
+      obj = SkillSimilarities.objects.get(job=job, candidate=candidate)
+      obj.score = row['score']
+    except:
+      SkillSimilarities.objects.create(
+        job = job,
+        candidate = candidate,
+        score = row['score']
+      )
+
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
 def candidate_dashboard(request):
@@ -152,9 +196,47 @@ def candidate_dashboard(request):
   print(request.user.candidate_profile)
   print(request.user.candidate_profile.id)
   print('**************')
-  jobs = Job.objects.all()
-  applications = request.user.candidate_profile.jobApplication_applied_by_candidate.all()
-  return render(request, 'accounts/candidate/dashboard.html')
+  candidate = request.user.candidate_profile
+  candidate_skills = candidate.skill_belongs_to_candidate.all()
+  
+  jobs = candidate.candidate_skill_match.filter(job__status='Open').order_by('-score')
+  
+  p = Paginator(jobs, 10)
+  page_number = request.GET.get('page', 1)
+  
+  try:
+    page_job = p.get_page(page_number)
+  except PageNotAnInteger:
+    page_job = p.page(1)
+  except EmptyPage:
+    page_job = p.page(p.num_pages)
+    
+  selected_job_obj = (page_job[0]).job
+  total_jobs = jobs.count()
+  
+  # recommended_jobs = recommend_jobs(candidate_skills, job_data)
+  
+  # recommend_words = {}
+  # for skill in candidate_skills:
+  #   s = str(skill.skill).lower()
+  #   try:
+  #     for w, sim in skill_model.wv.most_similar(s, topn=3):
+  #       recommend_words[w] = sim
+  #   except:
+  #     pass
+  # for title in recommend_words.keys():
+  #   filter = JobFilter({'job_required_skills': title}, queryset=jobs)
+  #   print(len(filter.qs))
+  
+  # ToDo (medium): check whether to include the application that candidates
+  #                 apply in the candidate dashboard
+  # applications = candidate.jobApplication_applied_by_candidate.all()
+  context = {
+    'page_obj': page_job,
+    'selected_job_obj': selected_job_obj,
+    'total_jobs': total_jobs,
+  }
+  return render(request, 'accounts/candidate/dashboard.html', context)
   
 
 @login_required(login_url='login')
@@ -212,6 +294,7 @@ def update_profile(request):
         # print('**********')
         if skill_form.is_valid():
           skill_form.save()
+          populate_skill_matching(candidate)
           return redirect('candidate-dashboard')
     
     context = {
@@ -235,11 +318,14 @@ def get_job_details(request, job_id):
     try:
       job = Job.objects.get(pk=job_id)
       try:
-        q_type = job.job_required_qualifications.values('qualification_type').distinct()
-        q_name = job.job_required_qualifications.values('qualification_name').distinct()
+        q_dict = defaultdict(list)
+        for q in job.job_required_qualifications.values():
+          q_dict[q['qualification_name']].append(q['qualification_type'])
+          
         q_list = []
-        for q in q_name:
-          q_list.append(q_type[0]['qualification_type'] + '/ ' + q_type[1]['qualification_type'] + ' in ' + q['qualification_name'])
+        for name, types in q_dict.items():
+          concatenated_types = '/ '.join(types)  # Join types with comma and space
+          q_list.append(concatenated_types + ' in ' + name)
       except:
         q_list = None
       
@@ -253,9 +339,13 @@ def get_job_details(request, job_id):
       job_data = {
           'id': job.pk,
           'title': job.title,
+          'description': job.description,
+          'closing_date': job.closing_date.strftime("%B %d, %Y"),
+          'job_type': job.job_type,
           'company': job.company.company_name,
           'location': job.location,
           'status': job.status,
+          'experience': job.job_required_experience_type,
           'qualifications': q_list,
           'skills': s_list
         }
