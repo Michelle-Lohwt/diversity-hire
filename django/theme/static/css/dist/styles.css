@@ -958,6 +958,10 @@ select {
   margin-top: -1px;
 }
 
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -1016,10 +1020,6 @@ select {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
 }
 
 .block {
@@ -1178,26 +1178,6 @@ select {
   max-width: 1280px;
 }
 
-.max-w-1 {
-  max-width: 0.25rem;
-}
-
-.max-w-10 {
-  max-width: 2.5rem;
-}
-
-.max-w-12 {
-  max-width: 3rem;
-}
-
-.max-w-20 {
-  max-width: 5rem;
-}
-
-.max-w-16 {
-  max-width: 4rem;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1271,10 +1251,6 @@ select {
 
 .content-start {
   align-content: flex-start;
-}
-
-.content-around {
-  align-content: space-around;
 }
 
 .items-start {
@@ -1369,10 +1345,6 @@ select {
 .divide-gray-300 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-divide-opacity));
-}
-
-.self-start {
-  align-self: flex-start;
 }
 
 .self-end {
@@ -1520,11 +1492,6 @@ select {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-indigo-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(238 242 255 / var(--tw-bg-opacity));
-}
-
 .bg-gradient-to-br {
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
@@ -1555,11 +1522,6 @@ select {
 
 .fill-current {
   fill: currentColor;
-}
-
-.object-contain {
-  -o-object-fit: contain;
-     object-fit: contain;
 }
 
 .p-1 {
@@ -1743,10 +1705,6 @@ select {
   padding-top: 1.5rem;
 }
 
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
 .text-left {
   text-align: left;
 }
@@ -1843,10 +1801,6 @@ select {
   line-height: 1.5;
 }
 
-.leading-5 {
-  line-height: 1.25rem;
-}
-
 .tracking-normal {
   letter-spacing: 0em;
 }
@@ -1939,6 +1893,10 @@ select {
   --tw-ring-color: rgb(209 213 219 / var(--tw-ring-opacity));
 }
 
+.ring-gray-600\/20 {
+  --tw-ring-color: rgb(75 85 99 / 0.2);
+}
+
 .ring-gray-900\/5 {
   --tw-ring-color: rgb(17 24 39 / 0.05);
 }
@@ -1949,14 +1907,6 @@ select {
 
 .ring-red-600\/20 {
   --tw-ring-color: rgb(220 38 38 / 0.2);
-}
-
-.ring-gray-600\/20 {
-  --tw-ring-color: rgb(75 85 99 / 0.2);
-}
-
-.ring-indigo-600\/20 {
-  --tw-ring-color: rgb(79 70 229 / 0.2);
 }
 
 .blur-3xl {
@@ -2322,10 +2272,6 @@ select {
 
   .sm\:pr-4 {
     padding-right: 1rem;
-  }
-
-  .sm\:pl-4 {
-    padding-left: 1rem;
   }
 
   .sm\:text-center {

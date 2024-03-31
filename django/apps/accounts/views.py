@@ -11,8 +11,9 @@ from .forms import (
   RegistrationForm, CandidateProfileForm, RecruiterProfileForm, 
   ExperienceFormSet, QualificationFormSet, SkillFormSet
   )
+from ..api.views import update_skill_matching
 from .models import BaseAccount, Candidate, Recruiter
-from ..jobs.models import Job, JobApplication, SkillSimilarities
+from ..jobs.models import Job, JobApplication
 from ..jobs.filters import JobFilter
 import pandas as pd
 from gensim.models import Word2Vec
@@ -147,46 +148,6 @@ def recruiter_jobs(request, job_id = None):
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
 
-def calculate_skill_matching(candidate_skills, jobs):
-  skill_model = Word2Vec.load('C:/Users/WT/OneDrive/Desktop/GitHub/projects/diversity-hire/extra/final_datasets/nlp/skill_model')
-  
-  all_matching = []
-  for job in jobs:
-    job_skills = job.job_required_skills.all()
-    avg_score = 0
-    
-    for skill in candidate_skills:
-      str_skill = str(skill.skill).lower()
-      total_score = 0
-      for job_skill in job_skills:
-        str_job_skill = str(job_skill).lower()
-        score = skill_model.wv.similarity(str_skill, str_job_skill)
-        total_score += score
-      avg_score += (total_score/len(job_skills))
-    avg_score /= len(candidate_skills)
-        
-    skill_match = {'job_id': job.id, 'score': avg_score * 100}
-    all_matching.append(skill_match)
-    
-  return pd.DataFrame(all_matching)
-  # df = pd.DataFrame(all_matching).sort_values(by='score', ascending=False)
-  
-def populate_skill_matching(candidate):
-  candidate_skills = candidate.skill_belongs_to_candidate.all()
-  jobs = Job.objects.all()
-  df = calculate_skill_matching(candidate_skills, jobs)
-  for index, row in df.iterrows():
-    job = Job.objects.get(pk=row['job_id'])
-    try:
-      obj = SkillSimilarities.objects.get(job=job, candidate=candidate)
-      obj.score = row['score']
-    except:
-      SkillSimilarities.objects.create(
-        job = job,
-        candidate = candidate,
-        score = row['score']
-      )
-
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
@@ -294,7 +255,7 @@ def update_profile(request):
         # print('**********')
         if skill_form.is_valid():
           skill_form.save()
-          populate_skill_matching(candidate)
+          update_skill_matching(candidates=candidate, one_candidate=True)
           return redirect('candidate-dashboard')
     
     context = {
@@ -354,43 +315,3 @@ def get_job_details(request, job_id):
       return JsonResponse({'error': 'Job not found'}, status=404)
   else:
     return JsonResponse({'error': 'Invalid request method'}, status=400)
-  
-# class CandidateProfileInline():
-#   form_class = CandidateProfileForm
-#   model = Candidate
-#   template_name = 'common/account_profile.html'
-  
-#   def form_valid(self, form):
-#     pass
-    
-#   def formset_experience_valid(self, formset):
-#     experiences = formset.save(commit=False)
-#     for obj in formset.deleted_objects:
-#       obj.delete()
-#     for experience in experiences:
-#       experience.candidate = self.object
-#       experience.save()
-    
-# class CandidateProfileUpdate(CandidateProfileInline, UpdateView):
-#   def get_context_data(self, **kwargs):
-#     ctx = super(CandidateProfileUpdate, self).get_context_data(**kwargs)
-#     print(ctx)
-#     # ctx['named_formsets'] = self.get_named_formsets()
-#     # return ctx
-  
-#   def get_named_formsets(self):
-#     return{
-#       'experiences': ExperienceFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='experiences'),
-#     }
-    
-# def delete_experience(request, exp_id):
-#   try:
-#     exp = Experience.objects.get(id = exp_id)
-#   except Experience.DoesNotExist:
-#     messages.success(
-#       request, 'Object does not exists.'
-#     )
-#     return redirect('profiles:update_profile', pk=exp.candidate.id)
-#   exp.delete()
-#   messages.success(request, 'Experience deleted successfully')
-#   return redirect('profiles:update_profile', pk=exp.candidate.id)

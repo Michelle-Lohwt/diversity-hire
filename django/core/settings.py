@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     
+    'apps.api',
     'apps.accounts',
     'apps.jobs',
     'apps.qualifications',

@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from ..accounts.models import Recruiter
 from .models import Job
 from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from ..accounts.decorators import allowed_users
+from ..api.views import update_skill_matching
+
 
 def jobs(request):
   jobs = Job.objects.all()
@@ -53,6 +54,7 @@ def update_job(request, job_id):
     
     if form.is_valid():
       form.save()
+      update_skill_matching(jobs=job, one_job=True)
       return redirect('/recruiter/dashboard/')
   
   context = {'form': form, 'change_job_status': change_job_status, 'job_status': job_status}
@@ -66,3 +68,4 @@ def change_job_status(request, job_id):
     job.status = "Open"
   job.save()
   return HttpResponse(status=200)
+
