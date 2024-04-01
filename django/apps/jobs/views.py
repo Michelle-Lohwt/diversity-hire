@@ -66,6 +66,7 @@ def change_job_status(request, job_id):
     job.status = "Close"
   else:
     job.status = "Open"
+    update_skill_matching(jobs=job, one_job=True)
   job.save()
   return HttpResponse(status=200)
 

@@ -51,7 +51,6 @@ def update_skill_matching(candidates=Candidate.objects.all(), jobs = Job.objects
   elif one_candidate:
     # One candidate only
     candidate_skills = candidates.skill_belongs_to_candidate.all()
-    count = 0
     for job in jobs:
       job_skills = job.job_required_skills.all()
       try:
