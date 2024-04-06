@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if last_login is None %}
+<!--navbar--> 
+{% else %}
+  {% include 'common/navbar.html' %}
+{% endif %}
+
+<main>
+  <div class="relative isolate overflow-hidden pt-16 mx-8">
+    <div class="bg-white mt-8">
+      <section
+        aria-labelledby="profile-details"
+        class="lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:pb-12 lg:pt-0"
+      >
+        <h2 id="profile-heading" class="sr-only">
+          Profile details
+        </h2>
+
+        <form id='profile-form' action="" method="POST">
+          {% csrf_token %}
+          <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+            <div>
+              <h3
+                id="contact-info-heading"
+                class="text-lg font-medium text-gray-900"
+              >
+                Personal information
+              </h3>
+
+              <div class="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
+                <div class="col-span-3 sm:col-span-4">
+                  <label
+                    for="recruiter-title"
+                    class="block text-sm font-medium text-gray-700"
+                    >Title</label
+                  >
+                  <div class="mt-1">
+                    {{form.recruiter_title}}
+                  </div>
+                </div>
+                <div class="col-span-3 sm:col-span-4">
+                  <label
+                    for="recruiter-summary"
+                    class="block text-sm font-medium text-gray-700"
+                    >About</label
+                  >
+                  <div class="mt-1">
+                    {{form.recruiter_summary}}
+                  </div>
+                </div>
+
+                <div class="col-span-3 sm:col-span-4">
+                  <label
+                    for="recruiter-linkedin"
+                    class="block text-sm font-medium text-gray-700"
+                    >LinkedIn URL</label
+                  >
+                  <div class="mt-1">
+                    {{form.linkedIn_URL}}
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    for="recruiter-gender"
+                    class="block text-sm font-medium text-gray-700"
+                    >Gender</label
+                  >
+                  <div class="mt-1">
+                    {{form.gender}}
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    for="recruiter-contact"
+                    class="block text-sm font-medium text-gray-700"
+                    >Contact</label
+                  >
+                  <div class="mt-1">
+                    {{form.contact_number}}
+                  </div>
+                </div>
+                  
+                <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="recruiter-dob"
+                    class="block text-sm font-medium text-gray-700"
+                    >Date of Birth</label
+                  >
+                  <div class="mt-1">
+                    {{form.date_of_birth}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-10 flex justify-end border-t border-gray-200">
+            <button
+              type="submit"
+              class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</main>
+{%endblock%}

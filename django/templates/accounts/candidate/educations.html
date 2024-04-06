@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src={% static 'js/editProfile.js' %}></script>
+
+{% if last_login == "None" %}
+<!--navbar--> 
+{% else %}
+  {% include 'common/navbar.html' %}
+{% endif %}
+
+<div class="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
+  {% if last_login == "None" %}
+  <!--sidenav--> 
+  {% else %}
+    {% include 'accounts/candidate/sidenav.html' %}
+  {% endif %}
+
+  <main class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
+    <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+      <div>
+        <h2 class="text-base font-semibold leading-7 text-gray-900">Educations</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+      </div>
+      <form id='qualification-form' action="" method="POST">
+        {% csrf_token %}
+        <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+            {{ qualification_formset.management_form }}
+            {% for q in qualification_formset %}
+            <div class="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-6 qualification-form-row">
+              {% if forloop.first %}
+                <div class="col-span-3 sm:col-span-4">
+                  <label
+                    for="qualification-label"
+                    class="block text-sm font-medium text-gray-700"
+                  >Qualification
+                  </label>
+                </div>
+                <div class="flex justify-center col-span-1 sm:col-span-1">
+                  <label
+                    for="qualification-delete-label"
+                    class="block text-sm font-medium text-gray-700"
+                  >{{ q.DELETE.label |capfirst}}
+                  </label>
+                </div>
+              {% endif %}
+              {% for hidden in q.hidden_fields %}
+                {{hidden}}
+              {% endfor %}
+              <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="qualification-title"
+                    class="block text-sm font-medium text-gray-700"
+                    >Education</label
+                  >
+                  <div class="mt-1">
+                    {{q.qualification}}
+                  </div>
+                </div>
+                <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="qualification-institute"
+                    class="block text-sm font-medium text-gray-700"
+                    >Institute</label
+                  >
+                  <div class="mt-1">
+                    {{q.institue_name}}
+                  </div>
+                </div>
+                <div class="col-span-3 sm:col-span-4">
+                  <label
+                    for="qualification-description"
+                    class="block text-sm font-medium text-gray-700"
+                    >Description</label
+                  >
+                  <div class="mt-1">
+                    {{q.qualification_description}}
+                  </div>
+                </div>
+                <div class="flex items-center justify-center">{{q.DELETE}}</div>
+                <div class="flex items-center justify-end">
+                  <div
+                  class="add-qualification-row rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 mr-2"
+                  >
+                  Add
+                  </div>
+                </div>
+                <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="qualification-start-date"
+                    class="block text-sm font-medium text-gray-700"
+                    >Start Date</label
+                  >
+                  <div class="mt-1">
+                    {{q.start_date}}
+                  </div>
+                </div>
+                <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="qualification-end-date"
+                    class="block text-sm font-medium text-gray-700"
+                    >End Date</label
+                  >
+                  <div class="mt-1">
+                    {{q.end_date}}
+                  </div>
+                </div>
+              </div>
+              
+            <hr class="border-t border-gray-200 mt-10">
+            {% endfor %}
+        </div> 
+        <div class="mt-10 flex justify-end">
+          <button
+            type="submit"
+            name="qualification_sub"
+            class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+          >
+          {% if last_login == "None" %}
+            Next
+          {% else %}
+            Save
+          {% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

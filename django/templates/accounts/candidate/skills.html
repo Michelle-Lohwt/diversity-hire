@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src={% static 'js/editProfile.js' %}></script>
+
+{% if last_login == "None" %}
+<!--navbar--> 
+{% else %}
+  {% include 'common/navbar.html' %}
+{% endif %}
+
+<div class="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
+  {% if last_login == "None" %}
+  <!--sidenav--> 
+  {% else %}
+    {% include 'accounts/candidate/sidenav.html' %}
+  {% endif %}
+
+  <main class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
+    <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+      <div>
+        <h2 class="text-base font-semibold leading-7 text-gray-900">Skills</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+      </div>
+      <form id='skill-form' action="" method="POST">
+        {% csrf_token %}
+        <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+          {{ skill_formset.management_form }}
+          {% for skill in skill_formset %}
+          <div class="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 skill-form-row">
+            {% if forloop.first %}
+                <div class="col-span-1 sm:col-span-2">
+                  <label
+                    for="skill-label"
+                    class="block text-sm font-medium text-gray-700"
+                  >{{ skill.skill.label |capfirst}}
+                  </label>
+                </div>
+                <div class="flex justify-center">
+                  <label
+                    for="skill-delete-label"
+                    class="block text-sm font-medium text-gray-700"
+                  >{{ skill.DELETE.label |capfirst}}
+                  </label>
+                </div>
+            {% endif %}
+            {% for hidden in skill.hidden_fields %}
+              {{ hidden }}
+            {% endfor %}
+              <div class="col-span-1 sm:col-span-2">
+                {{skill.skill}}
+              </div>
+              <div class="flex justify-center">
+                {{skill.DELETE}}
+              </div>
+              <div class="flex justify-end">
+                <div
+                  class="add-skill-row rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 mr-2"
+                >
+                  Add
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-10 flex justify-end">
+          <button
+            type="submit"
+            name="skill_sub"
+            class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+          >
+          {% if last_login == "None" %}
+            Next
+          {% else %}
+            Save
+          {% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if last_login == "None" %}
+<!--navbar--> 
+{% else %}
+  {% include 'common/navbar.html' %}
+{% endif %}
+
+<div class="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
+  {% if last_login == "None" %}
+  <!--sidenav--> 
+  {% else %}
+    {% include 'accounts/candidate/sidenav.html' %}
+  {% endif %}
+
+
+  <main class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
+    <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+      <div>
+        <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+      </div>
+      <form id='profile-form' action="" method="POST">
+        {% csrf_token %}
+        <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+          <div class="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
+            <div class="col-span-3 sm:col-span-4">
+              <label
+                for="candidate-summary"
+                class="block text-sm font-medium text-gray-700"
+                >About</label
+              >
+              <div class="mt-1">
+                {{form.candidate_summary}}
+              </div>
+            </div>
+
+            <div class="col-span-3 sm:col-span-4">
+              <label
+                for="candidate-linkedin"
+                class="block text-sm font-medium text-gray-700"
+                >LinkedIn URL</label
+              >
+              <div class="mt-1">
+                {{form.linkedIn_URL}}
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="candidate-gender"
+                class="block text-sm font-medium text-gray-700"
+                >Gender</label
+              >
+              <div class="mt-1">
+                {{form.gender}}
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="candidate-contact"
+                class="block text-sm font-medium text-gray-700"
+                >Contact</label
+              >
+              <div class="mt-1">
+                {{form.phone_number}}
+              </div>
+            </div>
+                
+            <div class="col-span-1 sm:col-span-2">
+              <label
+                for="candidate-dob"
+                class="block text-sm font-medium text-gray-700"
+                >Date of Birth</label
+              >
+              <div class="mt-1">
+                {{form.date_of_birth}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="mt-10 flex justify-end">
+          <button
+            type="submit"
+            name="profile_sub"
+            class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+          >
+            {% if last_login == "None" %}
+              Next
+            {% else %}
+              Save
+            {% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+{% endblock %}
