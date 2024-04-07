@@ -27,6 +27,99 @@
               <div class="flex-auto px-6 py-6">
                 <div class="sm:flex-auto">
                   <h1 class="text-base font-semibold leading-6 text-gray-900">All Jobs</h1>
+
+                  <!-- Job Filter -->
+                  <form id="filter_form" method="get">
+                    <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+                      <div class="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
+                        <div class="col-span-1 sm:col-span-2">
+                          <label
+                            for="job-title"
+                            class="block text-sm font-medium text-gray-700"
+                            >Position</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.title}}
+                          </div>
+                        </div>
+        
+                        <div>
+                          <label
+                            for="job_type"
+                            class="block text-sm font-medium text-gray-700"
+                            >Job Type</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.job_type}}
+                          </div>
+                        </div>
+        
+                        <div>
+                          <label
+                            for="job_experience"
+                            class="block text-sm font-medium text-gray-700"
+                            >Experience Level</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.job_required_experience_type}}
+                          </div>
+                        </div>
+        
+                        <div class="col-span-1 sm:col-span-2">
+                          <label
+                            for="job-company"
+                            class="block text-sm font-medium text-gray-700"
+                            >Company</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.company}}
+                          </div>
+                        </div>
+        
+                        <div class="col-span-1 sm:col-span-2">
+                          <label
+                            for="job-location"
+                            class="block text-sm font-medium text-gray-700"
+                            >Location</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.location}}
+                          </div>
+                        </div>
+                          
+                        <div>
+                          <label
+                            for="job-closing-date"
+                            class="block text-sm font-medium text-gray-700"
+                            >Closing Start Date</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.closing_date_start}}
+                          </div>
+                        </div>
+        
+                        <div>
+                          <label
+                            for="job-closing-date"
+                            class="block text-sm font-medium text-gray-700"
+                            >Closing End Date</label
+                          >
+                          <div class="mt-1">
+                            {{filter.form.closing_date_end}}
+                          </div>
+                        </div>
+        
+                        <div>
+                        </div>
+                        
+                        <div class="flex justify-end pt-6">
+                          <button class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50" type="submit">Search</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <!-- Job Results -->
                   <div class="my-2 flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
                     <p class="text-sm leading-6 text-white">
                       <strong class="font-semibold">Found Opening Jobs</strong><svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg>{{total_jobs}} <span aria-hidden="true">&rarr;</span>
@@ -38,7 +131,7 @@
                     <tr>
                       <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Job Title</th>
                       <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Company</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 text-center">Recommending Score</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 text-center">Skill Matching Score</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
@@ -61,6 +154,7 @@
         <!-- Job -->
         <div class="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
           <div class="sm:flex sm:items-center">
+            {% if select %}
             <dl class="flex flex-wrap">
               <div class="flex-auto pl-6 pt-6">
                 <dd class="mt-1 text-base font-semibold leading-6 text-gray-900" id="selected_job_title">{{selected_job_obj.title}}</dd>
@@ -143,108 +237,15 @@
                 <dd class="mt-2 text-gray-500"  id='selected_job_description'>{{selected_job_obj.description}}</dd>
               </div>
             </dl>
-          </div>
-          <!-- Filter -->
-          {% comment %} <form id="filter_form" method="get">
-            <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
-              <div class="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
-                <div class="col-span-1 sm:col-span-2">
-                  <label
-                    for="job-title"
-                    class="block text-sm font-medium text-gray-700"
-                    >Position</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.title}}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="job_type"
-                    class="block text-sm font-medium text-gray-700"
-                    >Job Type</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.job_type}}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="job_experience"
-                    class="block text-sm font-medium text-gray-700"
-                    >Experience Level</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.job_required_experience_type}}
-                  </div>
-                </div>
-
-                <div class="col-span-1 sm:col-span-2">
-                  <label
-                    for="job-company"
-                    class="block text-sm font-medium text-gray-700"
-                    >Company</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.company}}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="job-location"
-                    class="block text-sm font-medium text-gray-700"
-                    >Location</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.location}}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="job_status"
-                    class="block text-sm font-medium text-gray-700"
-                    >Status</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.status}}
-                  </div>
-                </div>
-                  
-                <div>
-                  <label
-                    for="job-closing-date"
-                    class="block text-sm font-medium text-gray-700"
-                    >Closing Start Date</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.closing_date_start}}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="job-closing-date"
-                    class="block text-sm font-medium text-gray-700"
-                    >Closing End Date</label
-                  >
-                  <div class="mt-1">
-                    {{filter.form.closing_date_end}}
-                  </div>
-                </div>
-
-                <div>
-                </div>
-                
-                <div class="flex justify-end pt-6">
-                  <button class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50" type="submit">Search</button>
-                </div>
+            {% else %}
+            <div class="grid min-h-full place-items-center bg-white py-24 sm:py-32">
+              <div class="text-center">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Result not found</h1>
+                <p class="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn’t find the result you’re looking for.</p>
               </div>
             </div>
-          </form> {% endcomment %}
+            {% endif %}
+          </div>
           
           <div class="mt-8 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -259,6 +260,7 @@
             </div>
           </div>
         </div>
+        
   
         <div class="lg:col-start-3">
           <!-- Applications -->

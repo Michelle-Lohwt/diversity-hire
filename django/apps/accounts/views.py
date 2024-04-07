@@ -14,7 +14,7 @@ from .forms import (
 from ..api.views import update_skill_matching
 from .models import BaseAccount, Candidate, Recruiter
 from ..jobs.models import Job, JobApplication
-from ..jobs.filters import JobFilter
+from ..jobs.filters import JobFilter, SkillMatchingJobFilter
 import pandas as pd
 from gensim.models import Word2Vec
 from collections import defaultdict
@@ -91,7 +91,8 @@ def recruiter_dashboard(request):
   print(request.user.recruiter_profile)
   print(request.user.recruiter_profile.id)
   print('**************')
-  jobs = request.user.recruiter_profile.job_created_by_recruiter.all().order_by('-created_at')
+  recruiter = request.user.recruiter_profile
+  jobs = recruiter.job_created_by_recruiter.all().order_by('-created_at')
   
   query_dict = request.GET
   filtered_dict = {key: value for key, value in query_dict.items() if value}
@@ -108,7 +109,6 @@ def recruiter_dashboard(request):
   except EmptyPage:
     page_job = p.page(p.num_pages)
     
-  # selected_job_obj = page_job[0]
   if not jobs:
     selected_job_obj = None
     select = False
@@ -130,7 +130,7 @@ def recruiter_dashboard(request):
   # rejected = applications.filter('Rejected').count()
   
   context = {
-    'recruiter': request.user.recruiter_profile,
+    'recruiter': recruiter,
     'page_obj': page_job, 
     'filter_query': filtered_dict,
     'filter': filter,
@@ -168,7 +168,13 @@ def candidate_dashboard(request):
   candidate = request.user.candidate_profile
   candidate_skills = candidate.skill_belongs_to_candidate.all()
   
-  jobs = candidate.candidate_skill_match.filter(job__status='Open').order_by('-score')
+  jobs = candidate.candidate_skill_match.filter(job__status='Open')
+  
+  query_dict = request.GET
+  filtered_dict = {key: value for key, value in query_dict.items() if value}
+  filter = SkillMatchingJobFilter(filtered_dict, queryset=jobs)
+  jobs = filter.qs
+  
   
   p = Paginator(jobs, 10)
   page_number = request.GET.get('page', 1)
@@ -180,7 +186,13 @@ def candidate_dashboard(request):
   except EmptyPage:
     page_job = p.page(p.num_pages)
     
-  selected_job_obj = (page_job[0]).job
+  if not jobs:
+    selected_job_obj = None
+    select = False
+  else:
+    selected_job_obj = (page_job[0]).job
+    select = True
+  
   total_jobs = jobs.count()
   
   # recommended_jobs = recommend_jobs(candidate_skills, job_data)
@@ -202,6 +214,9 @@ def candidate_dashboard(request):
   # applications = candidate.jobApplication_applied_by_candidate.all()
   context = {
     'page_obj': page_job,
+    'filter_query': filtered_dict,
+    'filter': filter,
+    'select': select,
     'selected_job_obj': selected_job_obj,
     'total_jobs': total_jobs,
   }

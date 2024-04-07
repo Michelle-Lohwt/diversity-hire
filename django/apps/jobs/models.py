@@ -84,3 +84,6 @@ class SkillSimilarities(models.Model):
   candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='candidate_skill_match')
   score = models.DecimalField(decimal_places=2, max_digits=5)
   updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    ordering = ('-score', )
