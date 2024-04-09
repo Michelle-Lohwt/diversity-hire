@@ -40,7 +40,6 @@ def register(request):
         Recruiter.objects.create(user=user)
       elif role == 'Candidate':
         obj = Candidate.objects.create(user=user)
-        # update_skill_matching(candidates=obj, one_candidate=True)
       
       messages.success(request, 'Account was created for ' + role + ' ' + username)
       return redirect('/login/')
@@ -191,6 +190,7 @@ def candidate_dashboard(request):
     select = False
   else:
     selected_job_obj = (page_job[0]).job
+    # request.session['job_id'] = selected_job_obj.pk
     select = True
   
   total_jobs = jobs.count()
@@ -327,80 +327,7 @@ def update_candidate_experiences(request, last_login):
     'experience_formset': experience_form, 
   }
   return render(request, 'accounts/candidate/experiences.html', context)
-  
 
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['Recruiter', 'Candidate'])
-# def update_profile(request):
-#   if request.user.role == 'Recruiter':
-#     is_recruiter = True
-#     recruiter = request.user.recruiter_profile
-#     profile_form = RecruiterProfileForm(instance=recruiter)
-    
-#     if request.method == 'POST':
-#       profile_form = RecruiterProfileForm(request.POST, instance=recruiter)
-      
-#       if profile_form.is_valid():
-#         profile_form.save()
-#         return redirect('recruiter-dashboard')
-    
-#     context = {
-#       'is_recruiter': is_recruiter,
-#       'form': profile_form, 
-#     }
-#   elif request.user.role == 'Candidate':
-#     is_recruiter = False
-#     candidate = request.user.candidate_profile
-    
-#     profile_form = CandidateProfileForm(instance=candidate)
-#     experience_form = ExperienceFormSet(instance=candidate)
-#     qualification_form = QualificationFormSet(instance=candidate)
-#     skill_form = SkillFormSet(instance=candidate)
-    
-#     if request.method == 'POST':
-#       if 'profile_sub' in request.POST:
-#         profile_form = CandidateProfileForm(request.POST, instance=candidate)
-#         if profile_form.is_valid():
-#           profile_form.save()
-#           return redirect('candidate-dashboard')
-        
-#       elif 'experience_sub' in request.POST:
-#         experience_form = ExperienceFormSet(request.POST, instance=candidate)
-#         if experience_form.is_valid():
-#           experience_form.save()
-#           return redirect('candidate-dashboard')
-        
-#       elif 'qualification_sub' in request.POST:
-#         qualification_form = QualificationFormSet(request.POST, instance=candidate)
-#         if qualification_form.is_valid():
-#           qualification_form.save()
-#           return redirect('candidate-dashboard')
-      
-#       elif 'skill_sub' in request.POST:
-#         skill_form = SkillFormSet(request.POST, instance=candidate)
-#         # print('**********')
-#         # print(skill_form.data)
-#         # print(skill_form.errors)
-#         # print('**********')
-#         if skill_form.is_valid():
-#           skill_form.save()
-#           update_skill_matching(candidates=candidate, one_candidate=True)
-#           return redirect('candidate-dashboard')
-    
-#     context = {
-#       'is_recruiter': is_recruiter,
-#       'form': profile_form, 
-#       'experience_formset': experience_form,
-#       'qualification_formset': qualification_form,
-#       'skill_formset': skill_form,
-#     }
-#   return render(request, 'common/account_profile.html', context)
-
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['Recruiter', 'Candidate'])
-# def view_profile(request):
-#   context = {}
-#   return render(request, 'common/account_profile.html', context)
 
 # API
 def get_job_details(request, job_id):

@@ -73,8 +73,9 @@ class JobApplication(models.Model):
   )
   candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='jobApplication_applied_by_candidate')
   job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobApplication_applying_under_job')
-  status = models.CharField(max_length=255, null=True, choices=STATUS)
+  status = models.CharField(max_length=255, null=True, choices=STATUS, default=STATUS[0][0])
   applied_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
 
 # class Scorecard(models.Model):
 #   pass

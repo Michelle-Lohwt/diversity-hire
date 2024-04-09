@@ -135,6 +135,9 @@ class Experience(models.Model):
 
   def __str__(self):
     return self.job_title
+  
+  class Meta:
+    ordering = ('-end_date',)
 
 # Recruiter
 class Recruiter(models.Model):

@@ -2,6 +2,8 @@ async function candidateSelectJob(jobId){
   await fetch(`/api/get_job_details/${jobId}`)
   .then(response => response.json())
   .then(data => {
+    sessionStorage.setItem('job_id', jobId);
+
     document.getElementById('selected_job_title').textContent = data.title
     document.getElementById('selected_job_description').textContent = data.description
     document.getElementById('selected_job_closing_date').textContent = data.closing_date

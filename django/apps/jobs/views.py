@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Job
+from django.http import HttpResponse, JsonResponse
+from .models import Job, JobApplication
 from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -60,6 +60,30 @@ def update_job(request, job_id):
   context = {'form': form, 'change_job_status': change_job_status, 'job_status': job_status}
   return render(request, 'jobs/job_form.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def view_application(request, job_application_id):
+  candidate = request.user.candidate_profile
+  application = JobApplication.objects.get(pk = job_application_id)
+  job = application.job
+  
+  qualifications = candidate.qualification_belongs_to_candidate.all()
+  skills = candidate.skill_belongs_to_candidate.all()
+  experiences = candidate.experience_belongs_to_candidate.all()
+  
+  context = {
+    'candidate': candidate,
+    'application': application,
+    'qualifications': qualifications,
+    'skills': skills,
+    'experiences': experiences,
+    'selected_job_obj': job,
+  }
+  return render(request, 'common/one_application.html', context)
+
+# API
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
 def change_job_status(request, job_id):
   job = Job.objects.get(id=job_id)
   if job.status == 'Open':
@@ -70,3 +94,15 @@ def change_job_status(request, job_id):
   job.save()
   return HttpResponse(status=200)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def apply_job(request, job_id):
+  candidate = request.user.candidate_profile
+  job = Job.objects.get(pk = job_id)
+  
+  job_application, created = JobApplication.objects.get_or_create(
+    candidate = candidate,
+    job = job
+  )
+
+  return JsonResponse({'job_application_id': job_application.pk}, content_type='application/json')
