@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'common/navbar.html' %}
+<main>
+  <div class="relative isolate overflow-hidden pt-16">
+    <div class="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 ">
+      {% comment %} {% include 'common/applicationBreadcrumbs.html' %} {% endcomment %}
+    </div>
+
+    <!-- Secondary navigation -->
+    <header class="pb-4 pt-6 sm:pb-6">
+      <div class="mx-auto flex max-w-full flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
+        <h1 class="text-base font-semibold leading-7 text-gray-900">Hello, {{request.user.candidate_profile}}</h1>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-full px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="relative border-b border-gray-200 pb-5 sm:pb-0">
+        <div class="mt-4">
+          {% include 'common/navApplication.html' %}
+        </div>
+      </div>
+
+      <!--Applications Tables-->
+        
+      <table class="min-w-full divide-y divide-gray-300 mt-4">
+        <thead>
+          <tr>
+            <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Job Title</th>
+            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Company</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Location</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Job Type</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Experience Type</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Latest Update</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Progressing Status</th>
+            <th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-0">
+              <span class="sr-only">View Application</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          {% for job in page_obj %}
+          <tr class="even:bg-gray-50 hover:bg-gray-200">
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 w-72 text-wrap">{{job.job.title}}</td>
+            <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 w-48 text-wrap">{{job.job.company}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.location}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.job_type}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.job_required_experience_type}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.updated_at}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.status}}</td>
+            <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+              <a href="{% url 'view-application' job.id %}" class="text-indigo-600 hover:text-indigo-900">View Application<span class="sr-only">, AAPS0L</span></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% include 'common/customPagination.html'%}
+
+    </div>
+
+  </div>
+</main>
+{% endblock %}

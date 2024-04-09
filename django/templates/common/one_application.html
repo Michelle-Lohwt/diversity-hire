@@ -6,7 +6,7 @@
 <main>
   <div class="relative isolate overflow-hidden pt-16">
     <div class="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 ">
-      {% include 'common/applicationBreadcrumbs.html' %}
+      {% comment %} {% include 'common/applicationBreadcrumbs.html' %} {% endcomment %}
     </div>
     <!-- Secondary navigation -->
     <header class="pb-4 pt-6 sm:pb-6">
@@ -140,51 +140,53 @@
                 <div class="overflow-hidden rounded-full bg-gray-200">
                   {% if application.status == "Applied" %}
                   <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.13 * 100%)"></div>
-                  {% elif application.status == ' Screening' %}
+                  {% elif application.status == 'Screening' %}
                   <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.37 * 100%)"></div>
-                  {% elif application.status == ' Interview' %}
+                  {% elif application.status == 'Interview' %}
                   <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.63 * 100%)"></div>
-                  {% elif application.status == ' Accepted' %}
+                  {% elif application.status == 'Accepted' %}
                   <div class="h-2 rounded-full bg-green-600" style="width: calc(1 * 100%)"></div>
-                  {% elif application.status == ' Rejected' %}
+                  {% elif application.status == 'Rejected' %}
                   <div class="h-2 rounded-full bg-red-600" style="width: calc(1 * 100%)"></div>
                   {% endif %}
                 </div>
                 <div class="mt-6 hidden grid-cols-4 font-medium text-gray-600 sm:grid">
+                  {% if application.status == "Applied" %}
                   <div class="text-center text-indigo-600">Applied</div>
-                  <div class=
-                  {% if application.status == "Screening" %} 
-                  "text-center text-indigo-600"
-                  {% else %}
-                  "text-center"
-                  {% endif %}
-                  >Screening</div>
-
-                  <div class=
-                  {% if application.status == "Interview" %} 
-                  "text-center text-indigo-600"
-                  {% else %}
-                  "text-center"
-                  {% endif %}
-                  >Interview</div>
-
-                  {% if application.status == "Accepted" %} 
+                  <div class="text-center">Screening</div>
+                  <div class="text-center">Interview</div>
+                  <div class="text-center">Result</div>
+                  {% elif application.status == "Screening" %}
+                  <div class="text-center text-indigo-600">Applied</div>
+                  <div class="text-center text-indigo-600">Screening</div>
+                  <div class="text-center">Interview</div>
+                  <div class="text-center">Result</div>
+                  {% elif application.status == "Interview" %}
+                  <div class="text-center text-indigo-600">Applied</div>
+                  <div class="text-center text-indigo-600">Screening</div>
+                  <div class="text-center text-indigo-600">Interview</div>
+                  <div class="text-center">Result</div>
+                  {% elif application.status == "Accepted" %}
+                  <div class="text-center text-green-600">Applied</div>
+                  <div class="text-center text-green-600">Screening</div>
+                  <div class="text-center text-green-600">Interview</div>
                   <div class="text-center text-green-600 flex justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     Accepted
                   </div>
-                  {% elif application.status == "Rejected" %} 
+                  {% elif application.status == "Rejected" %}
+                  <div class="text-center text-red-600">Applied</div>
+                  <div class="text-center text-red-600">Screening</div>
+                  <div class="text-center text-red-600">Interview</div>
                   <div class="text-center text-red-600 flex justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     Rejected
                   </div>
-                  {% else %}
-                  <div class="text-center">Result</div>
-                  {% endif %} 
+                  {% endif %}
                 </div>
               </div>
 

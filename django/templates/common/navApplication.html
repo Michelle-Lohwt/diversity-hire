@@ -1,0 +1,37 @@
+<nav class="-mb-px flex space-x-8">
+  <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+  {% url 'view-applied-applications' as view_applied_applications_url %}
+  {% if request.path_info == view_applied_applications_url %}
+  <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
+  {% else %}
+  <a href="{{view_applied_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Applied</a>
+  {% endif %}
+
+  {% url 'view-screening-applications' as view_screening_applications_url %}
+  {% if request.path_info == view_screening_applications_url %}
+  <a href="{{view_screening_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Screening</a>
+  {% else %}
+  <a href="{{view_screening_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
+  {% endif %}
+
+  {% url 'view-interview-applications' as view_interview_applications_url %}
+  {% if request.path_info == view_interview_applications_url %}
+  <a href="{{view_interview_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Interview</a>
+  {% else %}
+  <a href="{{view_interview_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
+  {% endif %}
+
+  {% url 'view-accepted-applications' as view_accepted_applications_url %}
+  {% if request.path_info == view_accepted_applications_url %}
+  <a href="{{view_accepted_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Accepted</a>
+  {% else %}
+  <a href="{{view_accepted_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
+  {% endif %}
+
+  {% url 'view-rejected-applications' as view_rejected_applications_url %}
+  {% if request.path_info == view_rejected_applications_url %}
+  <a href="{{view_rejected_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Rejected</a>
+  {% else %}
+  <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
+  {% endif %}
+</nav>

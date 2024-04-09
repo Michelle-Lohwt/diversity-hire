@@ -62,6 +62,61 @@ def update_job(request, job_id):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
+def view_applied_applications(request):
+  candidate = request.user.candidate_profile
+  applications = candidate.jobApplication_applied_by_candidate.filter(status='Applied')
+  
+  context = {
+    'page_obj': applications,
+  }
+  return render(request, 'common/all_applications.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def view_screening_applications(request):
+  candidate = request.user.candidate_profile
+  applications = candidate.jobApplication_applied_by_candidate.filter(status='Screening')
+  
+  context = {
+    'page_obj': applications,
+  }
+  return render(request, 'common/all_applications.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def view_interview_applications(request):
+  candidate = request.user.candidate_profile
+  applications = candidate.jobApplication_applied_by_candidate.filter(status='Interview')
+  
+  context = {
+    'page_obj': applications,
+  }
+  return render(request, 'common/all_applications.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def view_accepted_applications(request):
+  candidate = request.user.candidate_profile
+  applications = candidate.jobApplication_applied_by_candidate.filter(status='Accepted')
+  
+  context = {
+    'page_obj': applications,
+  }
+  return render(request, 'common/all_applications.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
+def view_rejected_applications(request):
+  candidate = request.user.candidate_profile
+  applications = candidate.jobApplication_applied_by_candidate.filter(status='Rejected')
+  
+  context = {
+    'page_obj': applications,
+  }
+  return render(request, 'common/all_applications.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Candidate'])
 def view_application(request, job_application_id):
   candidate = request.user.candidate_profile
   application = JobApplication.objects.get(pk = job_application_id)
