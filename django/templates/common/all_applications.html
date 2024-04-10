@@ -32,25 +32,30 @@
             <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Location</th>
             <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Job Type</th>
             <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Experience Type</th>
-            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Latest Update</th>
             <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Progressing Status</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Skill Matching Score</th>
+            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Latest Update</th>
             <th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-0">
               <span class="sr-only">View Application</span>
             </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          {% for job in page_obj %}
+          {% for job_application in page_obj %}
           <tr class="even:bg-gray-50 hover:bg-gray-200">
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 w-72 text-wrap">{{job.job.title}}</td>
-            <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 w-48 text-wrap">{{job.job.company}}</td>
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.location}}</td>
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.job_type}}</td>
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.job.job_required_experience_type}}</td>
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.updated_at}}</td>
-            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job.status}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 w-72 text-wrap">{{job_application.job.title}}</td>
+            <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 w-48 text-wrap">{{job_application.job.company}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job_application.job.location}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job_application.job.job_type}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job_application.job.job_required_experience_type}}</td>
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job_application.status}}</td>
+            {% load score %}
+            {% with job_application.job.job_skill_match|score:job_application.candidate as skill_similarity %}
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{skill_similarity}} %</td>
+            {% endwith %}
+            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 text-center">{{job_application.updated_at}}</td>
             <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-              <a href="{% url 'view-application' job.id %}" class="text-indigo-600 hover:text-indigo-900">View Application<span class="sr-only">, AAPS0L</span></a>
+              <a href="{% url 'view-application' job_application.id %}" class="text-indigo-600 hover:text-indigo-900">View Application<span class="sr-only">, AAPS0L</span></a>
             </td>
           </tr>
           {% endfor %}

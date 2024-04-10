@@ -76,6 +76,9 @@ class JobApplication(models.Model):
   status = models.CharField(max_length=255, null=True, choices=STATUS, default=STATUS[0][0])
   applied_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    ordering = ('-updated_at', )
 
 # class Scorecard(models.Model):
 #   pass

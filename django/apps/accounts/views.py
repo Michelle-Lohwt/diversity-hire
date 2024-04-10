@@ -165,9 +165,9 @@ def candidate_dashboard(request):
   print(request.user.candidate_profile.id)
   print('**************')
   candidate = request.user.candidate_profile
-  candidate_skills = candidate.skill_belongs_to_candidate.all()
   
-  jobs = candidate.candidate_skill_match.filter(job__status='Open')
+  applied_job_ids = JobApplication.objects.filter(candidate=candidate).values_list('job_id', flat=True)
+  jobs = candidate.candidate_skill_match.filter(job__status='Open').exclude(job_id__in=applied_job_ids)
   
   query_dict = request.GET
   filtered_dict = {key: value for key, value in query_dict.items() if value}
