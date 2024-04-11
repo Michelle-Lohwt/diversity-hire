@@ -62,7 +62,7 @@ def update_job(request, job_id):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
-def view_applied_applications(request):
+def candidate_applied_applications(request):
   candidate = request.user.candidate_profile
   applications = candidate.jobApplication_applied_by_candidate.filter(status='Applied')
   
@@ -73,7 +73,7 @@ def view_applied_applications(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
-def view_screening_applications(request):
+def candidate_screening_applications(request):
   candidate = request.user.candidate_profile
   applications = candidate.jobApplication_applied_by_candidate.filter(status='Screening')
   
@@ -84,7 +84,7 @@ def view_screening_applications(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
-def view_interview_applications(request):
+def candidate_interview_applications(request):
   candidate = request.user.candidate_profile
   applications = candidate.jobApplication_applied_by_candidate.filter(status='Interview')
   
@@ -95,7 +95,7 @@ def view_interview_applications(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
-def view_accepted_applications(request):
+def candidate_accepted_applications(request):
   candidate = request.user.candidate_profile
   applications = candidate.jobApplication_applied_by_candidate.filter(status='Accepted')
   
@@ -106,7 +106,7 @@ def view_accepted_applications(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
-def view_rejected_applications(request):
+def candidate_rejected_applications(request):
   candidate = request.user.candidate_profile
   applications = candidate.jobApplication_applied_by_candidate.filter(status='Rejected')
   
