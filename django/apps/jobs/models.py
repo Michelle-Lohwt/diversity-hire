@@ -79,9 +79,9 @@ class JobApplication(models.Model):
   
   class Meta:
     ordering = ('-updated_at', )
-
-# class Scorecard(models.Model):
-#   pass
+    
+  def __str__(self):
+    return f"{self.candidate} applying {self.job}"
 
 class SkillSimilarities(models.Model):
   job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job_skill_match')
@@ -91,3 +91,41 @@ class SkillSimilarities(models.Model):
   
   class Meta:
     ordering = ('-score', )
+    
+  def __str__(self):
+    return f'{self.score}'
+    
+class InterviewScoring(models.Model):
+  application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='interview_score_application')
+  overall_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  intellectual_curious_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  self_motivation_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  articulate_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  analytical_and_product_minded_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  remarks = models.TextField()
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    ordering = ('-overall_score', )
+    
+  def __str__(self):
+    return f'{self.overall_score}'
+  
+class Scorecard(models.Model):
+  application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='application_scorecard')
+  overall_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  skill_score = models.ForeignKey(SkillSimilarities, on_delete=models.CASCADE, related_name='skill_score')
+  qualification_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  social_media_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  interview_score = models.ForeignKey(InterviewScoring, on_delete=models.CASCADE, related_name='interview_score')
+  updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    ordering = ('-overall_score', )
+    
+  def __str__(self):
+    return f"Scorecard for {self.application}"
+  
+
+  

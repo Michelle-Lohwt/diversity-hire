@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Job, JobApplication
+from .models import Job, JobApplication, SkillSimilarities, InterviewScoring, Scorecard
 from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from ..accounts.decorators import allowed_users
-from ..api.views import update_skill_matching
-
+from ..api.views import (update_skill_matching, 
+                         update_qualification_matching,
+                         calculate_qualification_matching, 
+                         calculate_interview_overall_score,
+                         calculate_scorecard_overall_score)
 
 def jobs(request):
   jobs = Job.objects.all()
@@ -55,6 +58,7 @@ def update_job(request, job_id):
     if form.is_valid():
       form.save()
       update_skill_matching(jobs=job, one_job=True)
+      update_qualification_matching(job = job)
       return redirect('/recruiter/dashboard/')
   
   context = {'form': form, 'change_job_status': change_job_status, 'job_status': job_status}
@@ -155,9 +159,25 @@ def apply_job(request, job_id):
   candidate = request.user.candidate_profile
   job = Job.objects.get(pk = job_id)
   
-  job_application, created = JobApplication.objects.get_or_create(
+  job_application, job_application_created = JobApplication.objects.get_or_create(
     candidate = candidate,
     job = job
   )
+  skill_score_obj = SkillSimilarities.objects.get(job = job, candidate = candidate)
+  
+  interview_score_obj, interview_score_created = InterviewScoring.objects.get_or_create(
+    application = job_application
+  )
+  interview_score_obj.overall_score = calculate_interview_overall_score(interview_score_obj)
+  interview_score_obj.save()
+  
+  scorecard_obj, scorecard_created = Scorecard.objects.get_or_create(
+      application = job_application,
+      skill_score = skill_score_obj,
+      interview_score = interview_score_obj
+  )
+  scorecard_obj.qualification_score = calculate_qualification_matching(candidate, job)
+  scorecard_obj.overall_score = calculate_scorecard_overall_score(scorecard_obj)
+  scorecard_obj.save()
 
   return JsonResponse({'job_application_id': job_application.pk}, content_type='application/json')

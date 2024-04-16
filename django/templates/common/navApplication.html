@@ -1,37 +1,46 @@
 <nav class="-mb-px flex space-x-8">
   <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-  {% url 'candidate-applied-applications' as view_applied_applications_url %}
-  {% if request.path_info == view_applied_applications_url %}
-  <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
-  {% else %}
-  <a href="{{view_applied_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Applied</a>
-  {% endif %}
+  {% if request.user.candidate_profile %}
+    {% url 'candidate-applied-applications' as view_applied_applications_url %}
+    {% if request.path_info == view_applied_applications_url %}
+    <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
+    {% else %}
+    <a href="{{view_applied_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Applied</a>
+    {% endif %}
 
-  {% url 'candidate-screening-applications' as view_screening_applications_url %}
-  {% if request.path_info == view_screening_applications_url %}
-  <a href="{{view_screening_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Screening</a>
-  {% else %}
-  <a href="{{view_screening_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
-  {% endif %}
+    {% url 'candidate-screening-applications' as view_screening_applications_url %}
+    {% if request.path_info == view_screening_applications_url %}
+    <a href="{{view_screening_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Screening</a>
+    {% else %}
+    <a href="{{view_screening_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
+    {% endif %}
 
-  {% url 'candidate-interview-applications' as view_interview_applications_url %}
-  {% if request.path_info == view_interview_applications_url %}
-  <a href="{{view_interview_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Interview</a>
-  {% else %}
-  <a href="{{view_interview_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
-  {% endif %}
+    {% url 'candidate-interview-applications' as view_interview_applications_url %}
+    {% if request.path_info == view_interview_applications_url %}
+    <a href="{{view_interview_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Interview</a>
+    {% else %}
+    <a href="{{view_interview_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
+    {% endif %}
 
-  {% url 'candidate-accepted-applications' as view_accepted_applications_url %}
-  {% if request.path_info == view_accepted_applications_url %}
-  <a href="{{view_accepted_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Accepted</a>
-  {% else %}
-  <a href="{{view_accepted_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
-  {% endif %}
+    {% url 'candidate-accepted-applications' as view_accepted_applications_url %}
+    {% if request.path_info == view_accepted_applications_url %}
+    <a href="{{view_accepted_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Accepted</a>
+    {% else %}
+    <a href="{{view_accepted_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
+    {% endif %}
 
-  {% url 'candidate-rejected-applications' as view_rejected_applications_url %}
-  {% if request.path_info == view_rejected_applications_url %}
-  <a href="{{view_rejected_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Rejected</a>
-  {% else %}
-  <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
+    {% url 'candidate-rejected-applications' as view_rejected_applications_url %}
+    {% if request.path_info == view_rejected_applications_url %}
+    <a href="{{view_rejected_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Rejected</a>
+    {% else %}
+    <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
+    {% endif %}
+  {% elif request.user.recruiter_profile %}
+    <a href="#"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
+    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
+    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
+    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
+    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
+
   {% endif %}
 </nav>

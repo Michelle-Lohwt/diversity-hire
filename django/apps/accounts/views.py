@@ -142,15 +142,16 @@ def recruiter_dashboard(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Recruiter'])
-def recruiter_jobs(request, job_id = None):
-  jobs = request.user.recruiter_profile.job_created_by_recruiter.all()
+def recruiter_jobs(request, job_id):
+  # jobs = request.user.recruiter_profile.job_created_by_recruiter.all()
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Applied')
   
-  # if job_id == None:
-  #   jobs = jobs.first()
-  # else:
-  #   jobs = jobs.filter(job_id)
+  context = {
+    'job': job,
+  }
   
-  return render(request, 'accounts/recruiter/jobs.html')
+  return render(request, 'accounts/recruiter/jobs.html', context)
 
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
