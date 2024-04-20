@@ -52,9 +52,13 @@
                 <time datetime="2021-03-22">{{application.applied_at}}</time>
               </dd>
             </dl>
+            {% if request.user.recruiter_profile and application.status != 'Rejected' and application.status != 'Accepted' %}
+            <!--For testing -->
+            {% comment %} {% if request.user.recruiter_profile %} {% endcomment %}
             <dl>
               {% include 'applications/update_application_status.html' %}
             </dl>
+            {% endif %}
           </div>
 
           <!--Candidate Details -->

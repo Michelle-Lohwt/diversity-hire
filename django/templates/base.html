@@ -10,13 +10,11 @@
     {% tailwind_css %}
     <link rel='stylesheet' type='text/css' href="{% static 'css/main.css' %}">
   </head>
-  <body class="flex flex-col min-h-screen">
+  <body class="flex flex-col min-h-screen bg-white">
 
-  <main className='bg-white'>
     {% comment %} <img src="{% static 'images/img.png' %}"> {% endcomment %}
     {% block content %}
     <!---content-->
     {% endblock %}
-  </main>
   {% include 'common/footer.html' %}
   </body>

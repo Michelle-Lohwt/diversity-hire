@@ -22,5 +22,6 @@ urlpatterns = [
   
   # API
   path('api/change_job_status/<str:job_id>', views.change_job_status, name='change-job-status'),
+  path('api/update_application_status/<str:application_id>/<str:status>', views.update_application_status, name='update-application-status'),
   path('api/apply_job/<str:job_id>', views.apply_job, name='candidate-apply-job'),
 ]

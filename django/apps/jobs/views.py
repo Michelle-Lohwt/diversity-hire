@@ -273,8 +273,11 @@ def change_job_status(request, job_id):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Recruiter'])
-def update_application_status(request, application_id):
-  pass
+def update_application_status(request, application_id, status):
+  application = JobApplication.objects.get(id=application_id)
+  application.status = status
+  application.save()
+  return redirect('view-application', application_id)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
