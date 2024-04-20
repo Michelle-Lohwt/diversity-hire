@@ -1,0 +1,120 @@
+<div class="mt-8">
+  <h2 class="sr-only">Application Details</h2>
+
+  <div class="space-y-24">
+    <div class="text-sm">
+      <!--Progress Bar-->
+      <p class="mt-6 font-medium text-gray-900 md:mt-10">Processing on <time datetime="2021-03-24">{{application.updated_at}}</time></p>
+      <div class="border-b border-gray-200 py-8 sm:py-6 md:py-10">
+        <div class="overflow-hidden rounded-full bg-gray-200">
+          {% if application.status == "Applied" %}
+          <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.13 * 100%)"></div>
+          {% elif application.status == 'Screening' %}
+          <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.37 * 100%)"></div>
+          {% elif application.status == 'Interview' %}
+          <div class="h-2 rounded-full bg-indigo-600" style="width: calc(0.63 * 100%)"></div>
+          {% elif application.status == 'Accepted' %}
+          <div class="h-2 rounded-full bg-green-600" style="width: calc(1 * 100%)"></div>
+          {% elif application.status == 'Rejected' %}
+          <div class="h-2 rounded-full bg-red-600" style="width: calc(1 * 100%)"></div>
+          {% endif %}
+        </div>
+        <div class="mt-6 hidden grid-cols-4 font-medium text-gray-600 sm:grid">
+          {% if application.status == "Applied" %}
+          <div class="text-center text-indigo-600">Applied</div>
+          <div class="text-center">Screening</div>
+          <div class="text-center">Interview</div>
+          <div class="text-center">Result</div>
+          {% elif application.status == "Screening" %}
+          <div class="text-center text-indigo-600">Applied</div>
+          <div class="text-center text-indigo-600">Screening</div>
+          <div class="text-center">Interview</div>
+          <div class="text-center">Result</div>
+          {% elif application.status == "Interview" %}
+          <div class="text-center text-indigo-600">Applied</div>
+          <div class="text-center text-indigo-600">Screening</div>
+          <div class="text-center text-indigo-600">Interview</div>
+          <div class="text-center">Result</div>
+          {% elif application.status == "Accepted" %}
+          <div class="text-center text-green-600">Applied</div>
+          <div class="text-center text-green-600">Screening</div>
+          <div class="text-center text-green-600">Interview</div>
+          <div class="text-center text-green-600 flex justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            Accepted
+          </div>
+          {% elif application.status == "Rejected" %}
+          <div class="text-center text-red-600">Applied</div>
+          <div class="text-center text-red-600">Screening</div>
+          <div class="text-center text-red-600">Interview</div>
+          <div class="text-center text-red-600 flex justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            Rejected
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!--Candidate Information-->
+      <div class="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1 py-8 sm:py-6 md:py-10">
+        <h3 class="text-lg font-medium text-gray-900">{{candidate}}</h3>
+        <p class="mt-1 font-medium text-gray-900">+{{candidate.phone_number}}</p>
+        <a href="{{candidate.linkedIn_URL}}" target="_blank" class="font-medium text-indigo-600 hover:text-indigo-500">
+          {{candidate.linkedIn_URL}}
+          <span aria-hidden="true"> &rarr;</span>
+        </a>
+        <p class="mt-3 text-gray-500">{{candidate.candidate_summary}}</p>
+      </div>
+
+      <div class="sm:col-span-12 md:col-span-7">
+        <dl class="grid grid-cols-1 gap-y-8 pb-8 sm:grid-cols-2 sm:gap-x-6 sm:pb-6 md:pb-10">
+          <div>
+            <dt class="font-medium text-gray-900">Educations</dt>
+            <div id='candidate-qualifications'>
+              {% for q in qualifications %}
+              <div class="text-sm leading-6 rounded-md bg-blue-200 px-4 py-5 sm:px-6 text-nowrap mb-1 mr-1">
+                  <p class="font-semibold text-gray-900">{{q.qualification}}</p>
+                  <p class="text-gray-500">{{q.institue_name}}</p>
+                  <p class="text-gray-500">{{q.start_date}} - {{q.end_date}}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div>
+            <dt class="font-medium text-gray-900">Skills</dt>
+            <div class="text-gray-500 flex w-full flex-wrap" id='candidate-skills'>
+              {% for skill in skills %}
+                <dd class="text-sm leading-6 text-gray-700 rounded-md bg-violet-200 px-2 py-1 text-nowrap mb-1 mr-2">
+                  {{ skill.skill }}
+                </dd>
+              {% endfor %}
+            </div>
+          </div>
+        </dl>
+      </div>
+
+      <div class="sm:col-span-12 md:col-span-7 pb-8 sm:pb-6 md:pb-10 border-b border-gray-200">
+        <dt class="font-medium text-gray-900">Experiences</dt>
+        <div id='candidate-experiences'>
+          {% for exp in experiences %}
+          <div class="text-sm leading-6 rounded-md bg-gray-200 px-4 py-5 sm:px-6 text-nowrap mb-1 mr-1">
+            <span class="flex justify-between">
+              <p class="font-semibold text-gray-900">{{exp.job_title}}</p>
+              <p class="text-gray-500 text-end">{{exp.start_date}} - {{exp.end_date}}</p>
+            </span>
+              <p class="text-gray-500">{{exp.company_name}}</p>
+              <p class="text-gray-500">{{exp.job_description}}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+    </div>
+
+
+  </div>
+</div>

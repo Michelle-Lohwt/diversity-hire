@@ -8,6 +8,12 @@ urlpatterns = [
   path('recruiter/create_job/', views.create_job, name='create-job'),
   path('recruiter/update_job/<str:job_id>', views.update_job, name='update-job'),
   
+  path('recruiter/jobs/<str:job_id>', views.recruiter_job, name='recruiter-job'),
+  path('recruiter/jobs/screening/<str:job_id>', views.recruiter_screening_job, name='recruiter-screening-job'),
+  path('recruiter/jobs/interview/<str:job_id>', views.recruiter_interview_job, name='recruiter-interview-job'),
+  path('recruiter/jobs/accepted/<str:job_id>', views.recruiter_accepted_job, name='recruiter-accepted-job'),
+  path('recruiter/jobs/rejected/<str:job_id>', views.recruiter_rejected_job, name='recruiter-rejected-job'),
+  
   path('candidate/applications/applied', views.candidate_applied_applications, name='candidate-applied-applications'),
   path('candidate/applications/screening', views.candidate_screening_applications, name='candidate-screening-applications'),
   path('candidate/applications/interview', views.candidate_interview_applications, name='candidate-interview-applications'),

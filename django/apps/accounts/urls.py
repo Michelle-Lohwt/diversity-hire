@@ -9,8 +9,6 @@ urlpatterns = [
   
   path('recruiter/dashboard/', views.recruiter_dashboard, name='recruiter-dashboard'),
   path('recruiter/profile/<str:last_login>', views.update_recruiter_profile, name='recruiter-profile'),
-  path('recruiter/jobs/<str:job_id>', views.recruiter_jobs, name='recruiter-jobs'),
-  # path('recruiter/candidates', views.recruiter_candidates, name='recruiter-candidates'),
   
   path('candidate/dashboard/', views.candidate_dashboard, name='candidate-dashboard'),
   path('candidate/profile/<str:last_login>', views.update_candidate_profile, name='candidate-profile'),

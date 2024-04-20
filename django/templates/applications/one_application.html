@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% block content %} {% include 'common/navbar.html' %}
+
+<main>
+  <div class="relative isolate overflow-hidden pt-16">
+    <div class="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5">
+      {% comment %} {% include 'applications/applicationBreadcrumbs.html' %} {% endcomment %}
+    </div>
+
+    {% if request.user.candidate_profile %}
+    <!-- Secondary navigation -->
+    <header class="pt-6">
+      <div
+        class="mx-auto flex max-w-full flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8"
+      >
+        <h1 class="text-base font-semibold leading-7 text-gray-900">
+          Hello, {{request.user.candidate_profile}}
+        </h1>
+      </div>
+    </header>
+    {% endif %}
+
+    <div class="pt-6 mx-auto max-w-full px-4 pb-16 sm:px-6 lg:px-8">
+      <div
+        class="mx-auto grid max-w-2xl grid-cols-1 grid-rows-1 items-start gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-4"
+      >
+        {% if request.user.candidate_profile %}
+          <!-- Job Details -->
+          {% include 'jobs/one_job.html' %} 
+        {% elif request.user.recruiter_profile %} 
+          {% include 'scorecards/scorecard.html' %} 
+        {% endif %}
+
+        <!--Application Details-->
+        <div class="lg:col-start-3 lg:row-end-1 lg:col-span-2">
+          <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+            Application Details
+          </h1>
+
+          <div
+            class="mt-2 border-b border-gray-200 pb-5 text-sm sm:flex sm:justify-between"
+          >
+            <dl class="flex">
+              <dt class="text-gray-500">Application number&nbsp;</dt>
+              <dd class="font-medium text-gray-900">{{application.id}}</dd>
+              <dt>
+                <span class="sr-only">Date</span>
+                <span class="mx-2 text-gray-400" aria-hidden="true"
+                  >&middot;</span
+                >
+              </dt>
+              <dd class="font-medium text-indigo-600">
+                <time datetime="2021-03-22">{{application.applied_at}}</time>
+              </dd>
+            </dl>
+            <dl>
+              {% include 'applications/update_application_status.html' %}
+            </dl>
+          </div>
+
+          <!--Candidate Details -->
+          {% include 'applications/application.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

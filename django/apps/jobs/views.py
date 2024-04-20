@@ -5,6 +5,7 @@ from .forms import JobForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from ..accounts.decorators import allowed_users
+from django.db.models import Case, When, Value, IntegerField, Subquery, OuterRef
 from ..api.views import (update_skill_matching, 
                          update_qualification_matching,
                          calculate_qualification_matching, 
@@ -65,6 +66,121 @@ def update_job(request, job_id):
   return render(request, 'jobs/job_form.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def recruiter_job(request, job_id):
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Applied').annotate(
+    overall_score=Subquery(
+        Scorecard.objects.filter(application=OuterRef('pk'))
+        .values('overall_score')[:1]
+    ),
+    overall_score_order=Case(
+        When(overall_score=None, then=Value(0)),
+        default='overall_score',
+        output_field=IntegerField(),
+    )
+).order_by('-overall_score_order')
+  
+  context = {
+    'job': job,
+    'applications': applications,
+  }
+  
+  return render(request, 'accounts/recruiter/job.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def recruiter_screening_job(request, job_id):
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Screening').annotate(
+    overall_score=Subquery(
+        Scorecard.objects.filter(application=OuterRef('pk'))
+        .values('overall_score')[:1]
+    ),
+    overall_score_order=Case(
+        When(overall_score=None, then=Value(0)),
+        default='overall_score',
+        output_field=IntegerField(),
+    )
+).order_by('-overall_score_order')
+  
+  context = {
+    'job': job,
+    'applications': applications,
+  }
+  
+  return render(request, 'accounts/recruiter/job.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def recruiter_interview_job(request, job_id):
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Interview').annotate(
+    overall_score=Subquery(
+        Scorecard.objects.filter(application=OuterRef('pk'))
+        .values('overall_score')[:1]
+    ),
+    overall_score_order=Case(
+        When(overall_score=None, then=Value(0)),
+        default='overall_score',
+        output_field=IntegerField(),
+    )
+).order_by('-overall_score_order')
+  
+  context = {
+    'job': job,
+    'applications': applications,
+  }
+  
+  return render(request, 'accounts/recruiter/job.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def recruiter_accepted_job(request, job_id):
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Accepted').annotate(
+    overall_score=Subquery(
+        Scorecard.objects.filter(application=OuterRef('pk'))
+        .values('overall_score')[:1]
+    ),
+    overall_score_order=Case(
+        When(overall_score=None, then=Value(0)),
+        default='overall_score',
+        output_field=IntegerField(),
+    )
+).order_by('-overall_score_order')
+  
+  context = {
+    'job': job,
+    'applications': applications,
+  }
+  
+  return render(request, 'accounts/recruiter/job.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def recruiter_rejected_job(request, job_id):
+  job = Job.objects.get(pk = job_id)
+  applications = JobApplication.objects.filter(job = job, status = 'Rejected').annotate(
+    overall_score=Subquery(
+        Scorecard.objects.filter(application=OuterRef('pk'))
+        .values('overall_score')[:1]
+    ),
+    overall_score_order=Case(
+        When(overall_score=None, then=Value(0)),
+        default='overall_score',
+        output_field=IntegerField(),
+    )
+).order_by('-overall_score_order')
+  
+  context = {
+    'job': job,
+    'applications': applications,
+  }
+  
+  return render(request, 'accounts/recruiter/job.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
 def candidate_applied_applications(request):
   candidate = request.user.candidate_profile
@@ -73,7 +189,7 @@ def candidate_applied_applications(request):
   context = {
     'page_obj': applications,
   }
-  return render(request, 'common/all_applications.html', context)
+  return render(request, 'applications/all_applications.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
@@ -84,7 +200,7 @@ def candidate_screening_applications(request):
   context = {
     'page_obj': applications,
   }
-  return render(request, 'common/all_applications.html', context)
+  return render(request, 'applications/all_applications.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
@@ -95,7 +211,7 @@ def candidate_interview_applications(request):
   context = {
     'page_obj': applications,
   }
-  return render(request, 'common/all_applications.html', context)
+  return render(request, 'applications/all_applications.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
@@ -106,7 +222,7 @@ def candidate_accepted_applications(request):
   context = {
     'page_obj': applications,
   }
-  return render(request, 'common/all_applications.html', context)
+  return render(request, 'applications/all_applications.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
@@ -117,14 +233,15 @@ def candidate_rejected_applications(request):
   context = {
     'page_obj': applications,
   }
-  return render(request, 'common/all_applications.html', context)
+  return render(request, 'applications/all_applications.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Candidate'])
+@allowed_users(allowed_roles=['Recruiter', 'Candidate'])
 def view_application(request, job_application_id):
-  candidate = request.user.candidate_profile
   application = JobApplication.objects.get(pk = job_application_id)
+  candidate = application.candidate
   job = application.job
+  scorecard = application.application_scorecard
   
   qualifications = candidate.qualification_belongs_to_candidate.all()
   skills = candidate.skill_belongs_to_candidate.all()
@@ -133,12 +250,13 @@ def view_application(request, job_application_id):
   context = {
     'candidate': candidate,
     'application': application,
+    'scorecard': scorecard,
     'qualifications': qualifications,
     'skills': skills,
     'experiences': experiences,
-    'selected_job_obj': job,
+    'job': job,
   }
-  return render(request, 'common/one_application.html', context)
+  return render(request, 'applications/one_application.html', context)
 
 # API
 @login_required(login_url='login')
@@ -152,6 +270,11 @@ def change_job_status(request, job_id):
     update_skill_matching(jobs=job, one_job=True)
   job.save()
   return HttpResponse(status=200)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def update_application_status(request, application_id):
+  pass
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])

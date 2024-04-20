@@ -13,11 +13,10 @@ from .forms import (
   )
 from ..api.views import update_skill_matching
 from .models import BaseAccount, Candidate, Recruiter
-from ..jobs.models import Job, JobApplication
+from ..jobs.models import Job, JobApplication, Scorecard
 from ..jobs.filters import JobFilter, SkillMatchingJobFilter
-import pandas as pd
-from gensim.models import Word2Vec
 from collections import defaultdict
+
 
 def home(request):
   return render(request, 'home.html')
@@ -140,18 +139,6 @@ def recruiter_dashboard(request):
   }
   return render(request, 'accounts/recruiter/dashboard.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['Recruiter'])
-def recruiter_jobs(request, job_id):
-  # jobs = request.user.recruiter_profile.job_created_by_recruiter.all()
-  job = Job.objects.get(pk = job_id)
-  applications = JobApplication.objects.filter(job = job, status = 'Applied')
-  
-  context = {
-    'job': job,
-  }
-  
-  return render(request, 'accounts/recruiter/jobs.html', context)
 
 # def recruiter_candidates(request):
 #   return render(request, 'accounts/recruiter/dashboard.html')
