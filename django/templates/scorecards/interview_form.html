@@ -1,0 +1,144 @@
+<div class='mt-8 border-t'>
+  {% if application.status == 'Interview' %}
+  <form id='interview_form' action="" method="POST">
+    {% csrf_token %}
+    <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+      <div>
+        <h3
+        id="contact-info-heading"
+        class="text-lg font-medium text-gray-900"
+        >
+        Interview scoring information
+      </h3>
+      
+      {% for message in messages %}
+        <p id="messages" class="text-end text-sm text-red-600 bold">{{message}}</p>
+      {% endfor %}
+        <div class="mt-6 grid grid-rows-[auto] grid-cols-2 gap-x-4 gap-y-6 items-center">
+          <label
+            for="intellectual-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Intellectual curious score</label
+          >
+          <div class="row-span-1 text-black">
+            {{form.intellectual_curious_score}}
+          </div>
+          <label
+            for="motivation-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Self-motivation score</label
+          >
+          <div class="row-span-1 text-black">
+            {{form.self_motivation_score}}
+          </div>
+          <label
+            for="articulate-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Articulate score</label
+          >
+          <div class="row-span-1 text-black">
+            {{form.articulate_score}}
+          </div>
+          <label
+            for="apm-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Analytical and product minded score</label
+          >
+          <div class="row-span-1 text-black">
+            {{form.analytical_and_product_minded_score}}
+          </div>
+          <div class="row-span-1 col-span-2">
+            <label
+            for="remarks"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Remarks</label
+            >
+            <div class="mt-2 row-span-1 text-black">
+              {{form.remarks}}
+            </div>
+          </div>
+        </div>
+      </div>
+        
+    </div>
+    <div class="mt-4 flex justify-end">
+      <button
+        type="submit"
+        class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+  {% else %}
+  <div>
+    <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+      <div>
+        <h3
+          id="contact-info-heading"
+          class="text-lg font-medium text-gray-900"
+        >
+          Interview scoring information
+        </h3>
+
+        <div class="mt-6 grid grid-rows-[auto] grid-cols-2 gap-x-4 gap-y-6 items-center">
+          <label
+            for="intellectual-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Intellectual curious score</label
+          >
+          <div class="row-span-1">
+            {{interview_card.intellectual_curious_score}}%
+          </div>
+          <label
+            for="motivation-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Self-motivation score</label
+          >
+          <div class="row-span-1">
+            {{interview_card.self_motivation_score}}%
+          </div>
+          <label
+            for="articulate-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Articulate score</label
+          >
+          <div class="row-span-1">
+            {{interview_card.articulate_score}}%
+          </div>
+          <label
+            for="apm-score"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Analytical and product minded score</label
+          >
+          <div class="row-span-1">
+            {{interview_card.analytical_and_product_minded_score}}%
+          </div>
+          {% if interview_card.remarks == '' %}
+          <label
+            for="remarks"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Remarks</label
+            >
+            <div class="row-span-1">
+              None
+            </div>
+          {% else %}
+          <div class="row-span-1 col-span-2">
+            <label
+            for="remarks"
+            class="block text-sm font-medium row-span-1 col-span-1"
+            >Remarks</label
+            >
+            <div class="mt-2 row-span-1">
+              {{interview_card.remarks}}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+        
+    </div>
+  </div>
+  {% endif %}
+</div>

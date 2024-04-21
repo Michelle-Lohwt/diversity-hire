@@ -1,5 +1,6 @@
 from datetime import *
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from ..accounts.models import Candidate, Recruiter, Company
 from ..qualifications.models import Qualification
 from ..skills.models import Skill
@@ -98,10 +99,10 @@ class SkillSimilarities(models.Model):
 class InterviewScoring(models.Model):
   application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='interview_score_application')
   overall_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-  intellectual_curious_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-  self_motivation_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-  articulate_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-  analytical_and_product_minded_score = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+  intellectual_curious_score = models.DecimalField(decimal_places=2, max_digits=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+  self_motivation_score = models.DecimalField(decimal_places=2, max_digits=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+  articulate_score = models.DecimalField(decimal_places=2, max_digits=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+  analytical_and_product_minded_score = models.DecimalField(decimal_places=2, max_digits=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
   remarks = models.TextField()
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)

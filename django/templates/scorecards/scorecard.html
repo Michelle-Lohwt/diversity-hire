@@ -51,7 +51,7 @@
 
   </div>
 
-  {% if application.status == 'Interview' %}
+  {% if application.status == 'Interview' or application.status == 'Accepted' or application.status == 'Rejected' %}
     {% include 'scorecards/interview_form.html' %}
   {% endif %}
 </div>

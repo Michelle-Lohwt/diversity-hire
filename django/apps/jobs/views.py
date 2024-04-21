@@ -1,7 +1,8 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Job, JobApplication, SkillSimilarities, InterviewScoring, Scorecard
-from .forms import JobForm
+from .forms import JobForm, InterviewForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from ..accounts.decorators import allowed_users
@@ -247,7 +248,29 @@ def view_application(request, job_application_id):
   skills = candidate.skill_belongs_to_candidate.all()
   experiences = candidate.experience_belongs_to_candidate.all()
   
+  interview_scoring_instance = InterviewScoring.objects.get(application=application)
+  form = InterviewForm(instance=interview_scoring_instance)
+  
+  if request.method == 'POST':
+    form = InterviewForm(request.POST, instance=interview_scoring_instance)
+  
+    if form.is_valid():
+      form.save()
+      interview_scoring_instance.overall_score = calculate_interview_overall_score(interview_scoring_instance)
+      interview_scoring_instance.save()
+      scorecard.overall_score = calculate_scorecard_overall_score(scorecard)
+      scorecard.save()
+      
+      messages.success(request, 'Scorecard overall score is updated.')
+      messages.success(request, 'Interview performance score is updated.')
+      return redirect('view-application', application.id)
+    else:
+      messages.error(request, 'Score should be between 0 and 100.')
+      return redirect('view-application', application.id)
+  
   context = {
+    'form': form,
+    'interview_card': interview_scoring_instance,
     'candidate': candidate,
     'application': application,
     'scorecard': scorecard,

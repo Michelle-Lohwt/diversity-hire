@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput, Textarea, Select, DateInput, SelectMultiple
-from .models import Job
+from django.forms import ModelForm, TextInput, Textarea, Select, DateInput, SelectMultiple, NumberInput
+from .models import Job, InterviewScoring
 
 class JobForm(ModelForm):
   class Meta:
@@ -52,6 +52,42 @@ class JobForm(ModelForm):
       'job_required_skills': SelectMultiple(
         attrs={
           "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        }
+      ),
+    }
+    
+class InterviewForm(ModelForm):
+  class Meta:
+    model = InterviewScoring
+    fields = ('intellectual_curious_score',
+              'self_motivation_score',
+              'articulate_score',
+              'analytical_and_product_minded_score',
+              'remarks')
+    widgets = {
+      'intellectual_curious_score': NumberInput(
+        attrs = {
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'self_motivation_score': NumberInput(
+        attrs = {
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'articulate_score': NumberInput(
+        attrs = {
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'analytical_and_product_minded_score': NumberInput(
+        attrs = {
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'remarks': Textarea(
+        attrs = {
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
         }
       ),
     }
