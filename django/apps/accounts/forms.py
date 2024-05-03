@@ -9,7 +9,7 @@ from django.forms import (ModelForm,
                           Select, 
                           Textarea, 
                           URLInput)
-from .models import BaseAccount, Candidate, Recruiter, Experience
+from .models import BaseAccount, Candidate, Recruiter, Company, Experience
 from ..qualifications.models import CandidateQualification
 from ..skills.models import CandidateSkill
 
@@ -115,6 +115,38 @@ class RecruiterProfileForm(ModelForm):
       'date_of_birth': DateInput(
         attrs={
           "type": "date",
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+    }
+    
+class CompanyForm(ModelForm):
+  class Meta:
+    model = Company
+    fields = ('company_name', 'company_description', 'address', 'website_URL', 'industry')
+    widgets = {
+      'company_name': TextInput(
+        attrs={
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'company_description': Textarea(
+        attrs={
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'address': TextInput(
+        attrs={
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'website_URL': URLInput(
+        attrs={
+          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+        }
+      ),
+      'industry': Select(
+        attrs={
           "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
         }
       ),

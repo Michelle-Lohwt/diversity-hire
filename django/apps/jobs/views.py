@@ -37,7 +37,9 @@ def create_job(request):
     form = JobForm(request.POST)
     
     if form.is_valid():
-      form.instance.created_by = request.user.recruiter_profile
+      recruiter = request.user.recruiter_profile
+      form.instance.created_by = recruiter
+      form.instance.company = recruiter.recruiter_company
       form.save()
       return redirect('/recruiter/dashboard/')
   

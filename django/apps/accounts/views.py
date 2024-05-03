@@ -8,11 +8,11 @@ from django.shortcuts import render, redirect
 
 from .decorators import unauthenticated_user, allowed_users
 from .forms import (
-  RegistrationForm, CandidateProfileForm, RecruiterProfileForm, 
+  RegistrationForm, CandidateProfileForm, RecruiterProfileForm, CompanyForm,
   ExperienceFormSet, QualificationFormSet, SkillFormSet
   )
 from ..api.views import update_skill_matching
-from .models import BaseAccount, Candidate, Recruiter
+from .models import BaseAccount, Candidate, Recruiter, Company
 from ..jobs.models import Job, JobApplication, Scorecard
 from ..jobs.filters import JobFilter, SkillMatchingJobFilter
 from collections import defaultdict
@@ -36,9 +36,10 @@ def register(request):
       user.groups.add(group)
       
       if role == 'Recruiter':
-        Recruiter.objects.create(user=user)
+        recruiter = Recruiter.objects.create(user=user)
+        Company.objects.create(recruiter = recruiter)
       elif role == 'Candidate':
-        obj = Candidate.objects.create(user=user)
+        Candidate.objects.create(user=user)
       
       messages.success(request, 'Account was created for ' + role + ' ' + username)
       return redirect('/login/')
@@ -221,13 +222,35 @@ def update_recruiter_profile(request, last_login):
     
     if profile_form.is_valid():
       profile_form.save()
-      return redirect('recruiter-dashboard')
+      if last_login == 'None':
+        return redirect('recruiter-company', last_login)
+      else:
+        return redirect('recruiter-dashboard')
     
   context = {
     'last_login': last_login,
     'form': profile_form, 
   }
   return render(request, 'accounts/recruiter/profile.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def update_recruiter_company(request, last_login):
+  recruiter = request.user.recruiter_profile
+  company = Company.objects.get(recruiter = recruiter)
+  company_form = CompanyForm(instance=company)
+  
+  if request.method == 'POST':
+    company_form = CompanyForm(request.POST, instance=company)
+    if company_form.is_valid():
+      company_form.save()
+      return redirect('recruiter-dashboard')
+    
+  context = {
+    'last_login': last_login,
+    'form': company_form
+  }
+  return render(request, 'accounts/recruiter/company.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])

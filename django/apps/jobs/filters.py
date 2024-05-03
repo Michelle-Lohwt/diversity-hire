@@ -31,11 +31,11 @@ class JobFilter(FilterSet):
                             attrs = {
                               "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
                           }))
-  company = ModelChoiceFilter(queryset = Company.objects.all(),
-                     widget=Select(
-                       attrs = {
-                          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-                    }))
+  # company = ModelChoiceFilter(queryset = Company.objects.all(),
+  #                    widget=Select(
+  #                      attrs = {
+  #                         "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+  #                   }))
   location = CharFilter(field_name='location', lookup_expr='icontains',
                       widget=TextInput(
                        attrs = {
@@ -51,6 +51,7 @@ class JobFilter(FilterSet):
     fields = '__all__'
     exclude = ('created_by', 
                'description',
+               'company',
                'closing_date',
                'job_required_qualifications', 
                'job_required_skills',

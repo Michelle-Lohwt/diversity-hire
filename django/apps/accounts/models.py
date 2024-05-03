@@ -127,7 +127,7 @@ class Experience(models.Model):
   job_description = models.TextField()
   company_name = models.CharField(max_length=255, null=False)
   is_current_job = models.BooleanField(default=False)
-  start_date = models.DateField(null=False)
+  start_date = models.DateField(null=True)
   end_date = models.DateField(null=True)
   
   created_at = models.DateTimeField(auto_now_add=True)
@@ -138,6 +138,7 @@ class Experience(models.Model):
   
   class Meta:
     ordering = ('-end_date',)
+  
 
 # Recruiter
 class Recruiter(models.Model):
@@ -160,8 +161,7 @@ class Recruiter(models.Model):
   
   def __str__(self):
     return self.user.name
-
-
+  
 # Company
 class Industry(models.TextChoices):
   Business_Management = "Business and Management"
@@ -176,12 +176,15 @@ class Company(models.Model):
   industry = models.CharField(
       max_length=30, choices=Industry.choices, default=Industry.Business_Management
   )
-  
+  recruiter = models.OneToOneField(
+    Recruiter, null=True,
+    on_delete=models.CASCADE, related_name='recruiter_company'
+  )
   company_name = models.CharField(verbose_name="company name", max_length=255, null=False)
   company_description = models.TextField(null = True)
   address = models.TextField(null=True)
   website_URL = models.URLField()
-  company_id = models.FloatField(null=True)
+  # company_id = models.FloatField(null=True)
   
   class Meta:
     verbose_name_plural = 'companies'

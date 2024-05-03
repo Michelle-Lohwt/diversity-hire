@@ -5,7 +5,7 @@ class JobForm(ModelForm):
   class Meta:
     model = Job
     fields = '__all__'
-    exclude = ('created_by', 'status',)
+    exclude = ('created_by', 'status', 'company', )
     
     widgets = {
       'title': TextInput(
@@ -16,11 +16,6 @@ class JobForm(ModelForm):
       'description': Textarea(
         attrs={
           "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-        }
-      ),
-      'company': Select(
-        attrs={
-          "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         }
       ),
       'location': TextInput(

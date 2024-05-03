@@ -2,3 +2,7 @@ username,name,role,password
 recruiter_1,Recruiter Alpha (testing),Recruiter,abc123_dh
 recruiter_2,Recruiter Beta (testing),Recruiter,abc123_dh
 recruiter_3,Recruiter Gamma (testing),Recruiter,abc123_dh
+recruiter_4,Recruiter Delta (testing),Recruiter,abc123_dh
+recruiter_5,Recruiter Epsilon (testing),Recruiter,abc123_dh
+recruiter_6,Recruiter Zeta (testing),Recruiter,abc123_dh
+recruiter_7,Recruiter Eta (testing),Recruiter,abc123_dh
