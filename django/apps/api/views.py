@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 from ..accounts.models import Candidate
 from ..jobs.models import Job, SkillSimilarities, JobApplication, Scorecard
 from gensim.models import Word2Vec
@@ -6,6 +7,12 @@ from django.db import transaction
 import time
 from collections import defaultdict
 from decimal import Decimal
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from bs4 import BeautifulSoup
+import re
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Create your views here.
 
@@ -80,52 +87,157 @@ def calculate_qualification_matching(candidate, job):
   candidate_qualifications = candidate.qualification_belongs_to_candidate.all()
   job_qualifications = job.job_required_qualifications.all()
   
-  candidate_q_dict = defaultdict(list)
+  qualification_levels = {'certificate': 1, 'diploma': 2, 'bachelor': 3, 'master': 4, 'phd': 5}
+  similarity_scores = []
+  
+  # Group qualifications by name
+  candidate_q_grouped = defaultdict(list)
   for q in candidate_qualifications:
-    candidate_q_dict[q.qualification.qualification_type].append(q.qualification.qualification_name)
-  
-  job_q_dict = defaultdict(list)
+    candidate_q_grouped[q.qualification.qualification_name].append(q.qualification.qualification_type)
+
+  job_q_grouped = defaultdict(list)
   for q in job_qualifications:
-    job_q_dict[q.qualification_type].append(q.qualification_name)
-  
-  result = {}
-  max_similarity = 0
-  candidate_q_type = None
-  for q_type in set(job_q_dict.keys()):
-    job_qualifications = [q.lower() for q in job_q_dict[q_type]]
-    candidate_qualifications = [q.lower() for q in candidate_q_dict.get(q_type, [])]
-    qualification_types = ['certificate', 'diploma', 'bachelor', 'master', 'phd']
+    job_q_grouped[q.qualification_name].append(q.qualification_type)
+    
+  # Iterate through qualification groups and calculate match score
+  # Reference: https://g.co/gemini/share/6b6c790212e8
+  for job_q_name, job_q_types in job_q_grouped.items():
+    
+    for candidate_q_name, candidate_q_types in candidate_q_grouped.items():
+      similarity = qualification_model.wv.similarity(candidate_q_name.lower(), job_q_name.lower())
+      # print('*********')
+      # print(job_q_types, candidate_q_types)
+      # print(job_q_name, candidate_q_name, similarity)
+      # print('*********')
+      
+      matching_q_types = set(candidate_q_types) & set(job_q_types)
+      max_candidate_qualification = candidate_q_types[-1].lower()
+      max_candidate_qualification_level = qualification_levels[max_candidate_qualification]
+      
+      # Case 1: Exact matched
+      if ((len(matching_q_types) == candidate_q_types.__len__()) and (len(matching_q_types) == job_q_types.__len__())):
+        score_modifier = 1.0
+        print('yes', score_modifier)
+        
+      # Case 2: At least one qualification type matched
+      if matching_q_types:
+        min_matched_qualification = list(matching_q_types)[0].lower()
+        min_matched_qualification_level = qualification_levels[min_matched_qualification]
+        
+        level_diff = max_candidate_qualification_level - min_matched_qualification_level
+        # Case 2.1: One matched with higher level
+        if level_diff > 0:
+          score_modifier = 1.0 + 0.1 * level_diff
+        # Case 2.2: One matched
+        elif level_diff == 0:
+          score_modifier = 1.0
+          
+      # Case 3: No qualification type matched
+      else:
+        min_job_qualification = job_q_types[0].lower()
+        min_job_qualification_level = qualification_levels[min_job_qualification]
+        
+        level_diff = max_candidate_qualification_level - min_job_qualification_level
+        
+        # Case 3.1: All candidate qualification types are lower than the required job qualification types
+        if level_diff < 0:
+          score_modifier = 1.0 - 0.1 * level_diff
+        # Case 3.2: All candidate qualification types are higher than the required job qualification types
+        elif level_diff > 0:
+          score_modifier = 1.0 - 0.05 * level_diff
+         
+      similarity *= score_modifier
+      if similarity >= 1.0:
+        similarity = 1.0
+      # print(score_modifier)
+      # print(similarity)
+      similarity_scores.append(similarity)
+      
+  # print(max(similarity_scores))
+  return (max(similarity_scores) * 100)
 
-    for candidate_q in candidate_qualifications:
-      for job_q in job_qualifications:
-        similarity = qualification_model.wv.similarity(candidate_q, job_q)
-        if similarity > max_similarity:
-          max_similarity = similarity
-          candidate_q_type = q_type
-
-    if candidate_q_type:
-      candidate_q_index = qualification_types.index(candidate_q_type.lower())
-      job_q_index = qualification_types.index(q_type.lower())
-      if candidate_q_index > job_q_index:
-          max_similarity *= 1.2  # Increase the similarity score by 20%
-      elif candidate_q_index < job_q_index:
-          max_similarity *= 0.8  # Decrease the similarity score by 20%
-      result[q_type] = (candidate_q_type, max_similarity)
-    else:
-      result[q_type] = ("Unknown", 0.0)
-
-  # Get the maximum similarity score across all job_required_qualification types
-  max_score = max(score for _, score in result.values())
-  result = {q_type: (candidate_q_type, score) for q_type, (candidate_q_type, score) in result.items() if score == max_score}
+def scrolling(driver):
+  start = time.time()
   
-  final_score = list(result.values())[0][1] * 100
+  # will be used in the while loop
+  initialScroll = 0
+  finalScroll = 1000
+ 
+  while True:
+    driver.execute_script(f"window.scrollTo({initialScroll},{finalScroll})")
+    initialScroll = finalScroll
+    finalScroll += 1000
+    
+    time.sleep(0.2)
+    end = time.time()
+
+    if round(end - start) > 10:
+      break
+
+def scrapping(url, driver):
+  driver.get(url)
+  time.sleep(2)
+  scrolling(driver)
+  page_source = driver.page_source
+  soup = BeautifulSoup(page_source, "html.parser")
+  recent_posts = soup.find_all("div", class_="feed-shared-update-v2")
   
-  if final_score > 100:
-    return 100
-  elif final_score < 0:
-    return 0
-  else:
-    return final_score
+  content = []
+  for post in recent_posts[:100]:
+    post_content = post.find("div", class_="feed-shared-update-v2__description")
+    if post_content:
+      content.append(post_content.get_text().strip())
+      
+  return content
+
+def remove_unnecessary_characters(text):
+    text = re.sub(r'<.*?>', '', str(text))
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', str(text))
+    text = re.sub(r'\s+', ' ', str(text)).strip()
+    return text
+
+def calculate_sentiment_score(candidate):
+  # For demo ---------
+  start_time = time.time()
+  # ------------------
+  chromedriver_path = "C:/Users/WT/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
+  service = Service(executable_path=chromedriver_path)
+  options = webdriver.ChromeOptions()
+  options.add_argument('headless')
+  driver = webdriver.Chrome(service=service, options=options)
+  driver.get("https://linkedin.com/uas/login")
+  time.sleep(2)
+  
+  username = driver.find_element(By.ID, "username")
+  username.send_keys(settings.EMAIL)
+
+  pword = driver.find_element(By.ID, "password")
+  pword.send_keys(settings.PASSWORD)
+
+  driver.find_element(By.XPATH, "//button[@type='submit']").click()
+  content = scrapping(candidate.linkedIn_URL + '/recent-activity/all/', driver)
+  analyzer = SentimentIntensityAnalyzer()
+  total_compound_score = 0
+  
+  for post in content:
+    text = remove_unnecessary_characters(post)
+    sentiment_score = analyzer.polarity_scores(text)
+    total_compound_score += sentiment_score['compound']
+    
+  try:
+    avg_compound_score = total_compound_score/len(content)
+  except:
+    avg_compound_score = 0
+  
+  # For demo ---------
+  print('*******')
+  elapsed_time = time.time() - start_time
+  print(elapsed_time)
+  print(avg_compound_score)
+  print('*******')
+  
+  # ------------------
+  return avg_compound_score * 100
 
 def calculate_scorecard_overall_score(instance):
   score = (instance.skill_score.score + 

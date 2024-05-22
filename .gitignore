@@ -7,7 +7,7 @@ django/db.sqlite3
 
 
 # For teams
-django/.env.local
+django/.env
 
 # Extra
 extra/datasets

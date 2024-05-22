@@ -141,10 +141,6 @@ def recruiter_dashboard(request):
   return render(request, 'accounts/recruiter/dashboard.html', context)
 
 
-# def recruiter_candidates(request):
-#   return render(request, 'accounts/recruiter/dashboard.html')
-
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Candidate'])
 def candidate_dashboard(request):
@@ -156,7 +152,9 @@ def candidate_dashboard(request):
   candidate = request.user.candidate_profile
   
   applied_job_ids = JobApplication.objects.filter(candidate=candidate).values_list('job_id', flat=True)
-  jobs = candidate.candidate_skill_match.filter(job__status='Open').exclude(job_id__in=applied_job_ids)
+  # For testing
+  jobs = candidate.candidate_skill_match.filter(job__status='Open')
+  # jobs = candidate.candidate_skill_match.filter(job__status='Open').exclude(job_id__in=applied_job_ids)
   
   query_dict = request.GET
   filtered_dict = {key: value for key, value in query_dict.items() if value}

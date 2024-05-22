@@ -10,6 +10,7 @@ from django.db.models import Case, When, Value, IntegerField, Subquery, OuterRef
 from ..api.views import (update_skill_matching, 
                          update_qualification_matching,
                          calculate_qualification_matching, 
+                         calculate_sentiment_score,
                          calculate_interview_overall_score,
                          calculate_scorecard_overall_score)
 
@@ -328,6 +329,7 @@ def apply_job(request, job_id):
       interview_score = interview_score_obj
   )
   scorecard_obj.qualification_score = calculate_qualification_matching(candidate, job)
+  scorecard_obj.social_media_score = calculate_sentiment_score(candidate)
   scorecard_obj.overall_score = calculate_scorecard_overall_score(scorecard_obj)
   scorecard_obj.save()
 
