@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'rest_framework',
+    'django_apscheduler',
     
     'apps.api',
     'apps.accounts',

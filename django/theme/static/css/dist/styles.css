@@ -959,16 +959,6 @@ select {
   margin-bottom: 0.5rem;
 }
 
-.mx-20 {
-  margin-left: 5rem;
-  margin-right: 5rem;
-}
-
-.mx-40 {
-  margin-left: 10rem;
-  margin-right: 10rem;
-}
-
 .-mb-px {
   margin-bottom: -1px;
 }
@@ -1067,10 +1057,6 @@ select {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.ml-40 {
-  margin-left: 10rem;
 }
 
 .block {
@@ -1605,8 +1591,8 @@ select {
   border-color: rgb(17 24 39 / 0.1);
 }
 
-.border-gray-900\/5 {
-  border-color: rgb(17 24 39 / 0.05);
+.border-gray-900\/20 {
+  border-color: rgb(17 24 39 / 0.2);
 }
 
 .border-indigo-500 {
@@ -1618,37 +1604,8 @@ select {
   border-color: transparent;
 }
 
-.border-gray-900\/30 {
-  border-color: rgb(17 24 39 / 0.3);
-}
-
-.border-gray-900\/20 {
-  border-color: rgb(17 24 39 / 0.2);
-}
-
-.border-b-gray-900\/10 {
-  border-bottom-color: rgb(17 24 39 / 0.1);
-}
-
-.border-b-gray-900 {
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(17 24 39 / var(--tw-border-opacity));
-}
-
-.border-b-gray-900\/5 {
-  border-bottom-color: rgb(17 24 39 / 0.05);
-}
-
 .border-b-gray-900\/20 {
   border-bottom-color: rgb(17 24 39 / 0.2);
-}
-
-.border-b-gray-900\/100 {
-  border-bottom-color: rgb(17 24 39 / 1);
-}
-
-.border-b-gray-900\/30 {
-  border-bottom-color: rgb(17 24 39 / 0.3);
 }
 
 .bg-blue-200 {
@@ -1734,26 +1691,6 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
-.bg-slate-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
-}
-
-.bg-slate-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
-}
-
-.bg-slate-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-br {
@@ -1917,6 +1854,10 @@ select {
   padding-bottom: 4rem;
 }
 
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
 .pb-24 {
   padding-bottom: 6rem;
 }
@@ -1983,18 +1924,6 @@ select {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pb-2 {
-  padding-bottom: 0.5rem;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
 }
 
 .text-left {
@@ -2236,8 +2165,8 @@ select {
   --tw-ring-color: rgb(75 85 99 / 0.2);
 }
 
-.ring-gray-900\/5 {
-  --tw-ring-color: rgb(17 24 39 / 0.05);
+.ring-gray-900\/20 {
+  --tw-ring-color: rgb(17 24 39 / 0.2);
 }
 
 .ring-green-600\/20 {
@@ -2246,18 +2175,6 @@ select {
 
 .ring-red-600\/20 {
   --tw-ring-color: rgb(220 38 38 / 0.2);
-}
-
-.ring-gray-900\/30 {
-  --tw-ring-color: rgb(17 24 39 / 0.3);
-}
-
-.ring-gray-900\/60 {
-  --tw-ring-color: rgb(17 24 39 / 0.6);
-}
-
-.ring-gray-900\/20 {
-  --tw-ring-color: rgb(17 24 39 / 0.2);
 }
 
 .ring-opacity-5 {
@@ -2705,6 +2622,10 @@ select {
     padding-bottom: 3.5rem;
   }
 
+  .sm\:pb-2 {
+    padding-bottom: 0.5rem;
+  }
+
   .sm\:pb-6 {
     padding-bottom: 1.5rem;
   }
@@ -2731,14 +2652,6 @@ select {
 
   .sm\:pr-4 {
     padding-right: 1rem;
-  }
-
-  .sm\:pb-4 {
-    padding-bottom: 1rem;
-  }
-
-  .sm\:pb-2 {
-    padding-bottom: 0.5rem;
   }
 
   .sm\:text-center {
@@ -2930,10 +2843,6 @@ select {
     flex: none;
   }
 
-  .lg\:flex-1 {
-    flex: 1 1 0%;
-  }
-
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2965,14 +2874,6 @@ select {
 
   .lg\:border-t-0 {
     border-top-width: 0px;
-  }
-
-  .lg\:border-t-gray-900\/5 {
-    border-top-color: rgb(17 24 39 / 0.05);
-  }
-
-  .lg\:border-t-gray-900\/30 {
-    border-top-color: rgb(17 24 39 / 0.3);
   }
 
   .lg\:border-t-gray-900\/20 {

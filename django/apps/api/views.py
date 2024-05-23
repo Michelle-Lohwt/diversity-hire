@@ -13,6 +13,7 @@ from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import re
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from django.db.models import Q
 
 # Create your views here.
 
@@ -117,7 +118,6 @@ def calculate_qualification_matching(candidate, job):
       # Case 1: Exact matched
       if ((len(matching_q_types) == candidate_q_types.__len__()) and (len(matching_q_types) == job_q_types.__len__())):
         score_modifier = 1.0
-        print('yes', score_modifier)
         
       # Case 2: At least one qualification type matched
       if matching_q_types:
@@ -200,35 +200,36 @@ def calculate_sentiment_score(candidate):
   # For demo ---------
   start_time = time.time()
   # ------------------
-  chromedriver_path = "C:/Users/WT/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
-  service = Service(executable_path=chromedriver_path)
-  options = webdriver.ChromeOptions()
-  options.add_argument('headless')
-  driver = webdriver.Chrome(service=service, options=options)
-  driver.get("https://linkedin.com/uas/login")
-  time.sleep(2)
-  
-  username = driver.find_element(By.ID, "username")
-  username.send_keys(settings.EMAIL)
-
-  pword = driver.find_element(By.ID, "password")
-  pword.send_keys(settings.PASSWORD)
-
-  driver.find_element(By.XPATH, "//button[@type='submit']").click()
-  content = scrapping(candidate.linkedIn_URL + '/recent-activity/all/', driver)
-  analyzer = SentimentIntensityAnalyzer()
-  total_compound_score = 0
-  
-  for post in content:
-    text = remove_unnecessary_characters(post)
-    sentiment_score = analyzer.polarity_scores(text)
-    total_compound_score += sentiment_score['compound']
-    
   try:
-    avg_compound_score = total_compound_score/len(content)
+    chromedriver_path = "C:/Users/WT/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
+    service = Service(executable_path=chromedriver_path)
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get("https://linkedin.com/uas/login")
+    time.sleep(2)
+    
+    username = driver.find_element(By.ID, "username")
+    username.send_keys(settings.EMAIL)
+
+    pword = driver.find_element(By.ID, "password")
+    pword.send_keys(settings.PASSWORD)
+
+    driver.find_element(By.XPATH, "//button[@type='submit']").click()
+    content = scrapping(candidate.linkedIn_URL + '/recent-activity/all/', driver)
+    analyzer = SentimentIntensityAnalyzer()
+    total_compound_score = 0
+    
+    for post in content:
+      text = remove_unnecessary_characters(post)
+      sentiment_score = analyzer.polarity_scores(text)
+      total_compound_score += sentiment_score['compound']
+    
+  
+      avg_compound_score = total_compound_score/len(content)
   except:
     avg_compound_score = 0
-  
+    
   # For demo ---------
   print('*******')
   elapsed_time = time.time() - start_time
@@ -258,5 +259,13 @@ def update_qualification_matching(job):
   for application in applications:
     scorecard = Scorecard.objects.get(application = application)
     scorecard.qualification_score = calculate_qualification_matching(application.candidate, job)
+    scorecard.overall_score = calculate_scorecard_overall_score(scorecard)
+    scorecard.save()
+    
+def update_sentiment_score():
+  applications = JobApplication.objects.exclude(Q(status='Accepted') | Q(status='Rejected'))
+  for application in applications:
+    scorecard = Scorecard.objects.get(application = application)
+    scorecard.social_media_score = calculate_sentiment_score(application.candidate)
     scorecard.overall_score = calculate_scorecard_overall_score(scorecard)
     scorecard.save()
