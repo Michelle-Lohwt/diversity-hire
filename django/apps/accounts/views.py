@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
-
+from django.db.models import Q
 from .decorators import unauthenticated_user, allowed_users
 from .forms import (
   RegistrationForm, CandidateProfileForm, RecruiterProfileForm, CompanyForm,
@@ -98,7 +98,21 @@ def recruiter_dashboard(request):
   filter = JobFilter(filtered_dict, queryset=jobs)
   jobs = filter.qs
   
-  p = Paginator(jobs, 10)
+  job_data = []
+  for job in jobs:
+    job_applications = job.jobApplication_applying_under_job.all()
+    applied_count = job_applications.filter(status = "Applied").count()
+    interview_count = job_applications.filter(status = "Interview").count()
+    accepted_count = job_applications.filter(status = "Accept").count()
+    job_data.append({
+      'job': job,
+      'job_applications': job_applications,
+      'applied_count': applied_count,
+      'interview_count': interview_count,
+      'accepted_count': accepted_count
+    })
+    
+  p = Paginator(job_data, 10)
   page_number = request.GET.get('page', 1)
   
   try:
@@ -108,25 +122,21 @@ def recruiter_dashboard(request):
   except EmptyPage:
     page_job = p.page(p.num_pages)
     
-  if not jobs:
+  if not job_data:
     selected_job_obj = None
     select = False
   else:
     selected_job_obj = page_job[0]
     select = True
-    
-  applications = JobApplication.objects.all()
   
   # ToDo (high): change 
   # request.session['job_id'] = selected_job_obj.pk
   total_jobs = jobs.count()
   
-  # total_applications = applications.count()
-  # applied = applications.filter('Applied').count()
-  # screening = applications.filter('Screening').count()
-  # interview = applications.filter('Interview').count()
-  # accepted = applications.filter('Accepted').count()
-  # rejected = applications.filter('Rejected').count()
+  applied = JobApplication.objects.filter(status='Applied').count()
+  screening = JobApplication.objects.filter(status='Screening').count()
+  interview = JobApplication.objects.filter(status='Interview').count()
+  accepted = JobApplication.objects.filter(status='Accepted').count()
   
   context = {
     'recruiter': recruiter,
@@ -135,8 +145,11 @@ def recruiter_dashboard(request):
     'filter': filter,
     'select': select,
     'selected_job_obj': selected_job_obj,
-    'applications': applications,
     'total_jobs': total_jobs,
+    'applied_count': applied,
+    'screening_count': screening,
+    'interview_count': interview,
+    'accepted_count': accepted
   }
   return render(request, 'accounts/recruiter/dashboard.html', context)
 
@@ -153,14 +166,13 @@ def candidate_dashboard(request):
   
   applied_job_ids = JobApplication.objects.filter(candidate=candidate).values_list('job_id', flat=True)
   # For testing
-  jobs = candidate.candidate_skill_match.filter(job__status='Open')
-  # jobs = candidate.candidate_skill_match.filter(job__status='Open').exclude(job_id__in=applied_job_ids)
+  # jobs = candidate.candidate_skill_match.filter(job__status='Open')
+  jobs = candidate.candidate_skill_match.filter(job__status='Open').exclude(job_id__in=applied_job_ids)
   
   query_dict = request.GET
   filtered_dict = {key: value for key, value in query_dict.items() if value}
   filter = SkillMatchingJobFilter(filtered_dict, queryset=jobs)
   jobs = filter.qs
-  
   
   p = Paginator(jobs, 10)
   page_number = request.GET.get('page', 1)
@@ -343,6 +355,7 @@ def get_job_details(request, job_id):
   if request.method == 'GET':
     try:
       job = Job.objects.get(pk=job_id)
+      applications = job.jobApplication_applying_under_job.all()
       try:
         q_dict = defaultdict(list)
         for q in job.job_required_qualifications.values():
@@ -361,7 +374,20 @@ def get_job_details(request, job_id):
           s_list.append(skill['skill_name'])
       except:
         s_list = None
-      
+        
+      try:
+        application_list = []
+        for application in applications:
+          application_dict = {
+            'candidate_name': application.candidate.user.name,
+            'latest_job_title': application.candidate.experience_belongs_to_candidate.first().job_title,
+            'matching_score': application.application_scorecard.overall_score,
+            'status': application.status
+          }
+        application_list.append(application_dict)
+      except:
+        application_list = None
+        
       job_data = {
           'id': job.pk,
           'title': job.title,
@@ -373,7 +399,8 @@ def get_job_details(request, job_id):
           'status': job.status,
           'experience': job.job_required_experience_type,
           'qualifications': q_list,
-          'skills': s_list
+          'skills': s_list,
+          'applications': application_list
         }
       return JsonResponse(job_data, content_type='application/json')
     except Job.DoesNotExist:

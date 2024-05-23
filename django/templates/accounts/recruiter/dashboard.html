@@ -12,39 +12,39 @@
     <div class="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
     </div>
     <!-- Secondary navigation -->
-    <header class="pb-4 pt-6 sm:pb-6">
+    <header class="pb-2 pt-6 sm:pb-2">
       <div class="mx-auto flex max-w-full flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
         <h1 class="text-base font-semibold leading-7 text-gray-900">My Jobs</h1>
-        <div class="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
+        {% comment %} <div class="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
           <a href="#" class="text-indigo-600">Last 7 days</a>
           <a href="#" class="text-gray-700">Last 30 days</a>
           <a href="#" class="text-gray-700">All-time</a>
-        </div>
+        </div> {% endcomment %}
       </div>
     </header>
 
     <!-- Stats -->
-    <div class="border-b border-b-gray-900/10 lg:border-t lg:border-t-gray-900/5">
+    <div class="border-b border-b-gray-900/20 lg:border-t lg:border-t-gray-900/20">
       <dl class="mx-auto grid max-w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:px-2 xl:px-0">
-        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8">
-          <dt class="text-sm font-medium leading-6 text-gray-500">New Applicants (Screening)</dt>
-          <dd class="text-xs font-medium text-gray-700">+4.75%</dd>
-          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">$405,091.00</dd>
+        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/20 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8">
+          <dt class="text-sm font-medium leading-6 text-gray-500">New Applications</dt>
+          {% comment %} <dd class="text-xs font-medium text-gray-700">+4.75%</dd> {% endcomment %}
+          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">{{applied_count}}</dd>
         </div>
-        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
-          <dt class="text-sm font-medium leading-6 text-gray-500">Interview Applicants</dt>
-          <dd class="text-xs font-medium text-rose-600">+54.02%</dd>
-          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">$12,787.00</dd>
+        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/20 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
+          <dt class="text-sm font-medium leading-6 text-gray-500">Screening Applications</dt>
+          {% comment %} <dd class="text-xs font-medium text-rose-600">+54.02%</dd> {% endcomment %}
+          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">{{screening_count}}</dd>
         </div>
-        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 lg:border-l">
-          <dt class="text-sm font-medium leading-6 text-gray-500">Rate Applicants</dt>
-          <dd class="text-xs font-medium text-gray-700">-1.39%</dd>
-          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">$245,988.00</dd>
+        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/20 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 lg:border-l">
+          <dt class="text-sm font-medium leading-6 text-gray-500">Pending for Interview Applications</dt>
+          {% comment %} <dd class="text-xs font-medium text-gray-700">-1.39%</dd> {% endcomment %}
+          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">{{interview_count}}</dd>
         </div>
-        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
+        <div class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/20 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
           <dt class="text-sm font-medium leading-6 text-gray-500">Converted Applicants</dt>
-          <dd class="text-xs font-medium text-rose-600">+10.18%</dd>
-          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">$30,156.00</dd>
+          {% comment %} <dd class="text-xs font-medium text-rose-600">+10.18%</dd> {% endcomment %}
+          <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">{{accepted_count}}</dd>
         </div>
       </dl>
     </div>
@@ -60,28 +60,28 @@
         {% if select %}
         <div class="lg:col-start-3 lg:row-end-1">
           <h2 class="sr-only">Summary</h2>
-          <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+          <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/20">
             <dl class="flex flex-wrap">
               <div class="flex-auto pl-6 pt-6">
-                <dd class="mt-1 text-base font-semibold leading-6 text-gray-900" id="selected_job_title">{{selected_job_obj.title}}</dd>
-                <dt class="text-sm leading-6 text-gray-500" id="selected_job_company">{{selected_job_obj.company}}</dt>
+                <dd class="mt-1 text-base font-semibold leading-6 text-gray-900" id="selected_job_title">{{selected_job_obj.job.title}}</dd>
+                <dt class="text-sm leading-6 text-gray-500" id="selected_job_company">{{selected_job_obj.job.company}}</dt>
               </div>
               <div class="flex-none self-end px-6 pt-4">
                 <dt class="sr-only">Status</dt>
                 <dd 
                 id="selected_job_status"
                 class =
-                {% if selected_job_obj.status == 'Open' %}
+                {% if selected_job_obj.job.status == 'Open' %}
                 "rounded-md px-2 py-1 text-xs font-medium bg-green-50 text-green-600 ring-1 ring-inset ring-green-600/20"
                 {% else %}
                 "rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-600 ring-1 ring-inset ring-red-600/20"
                 {% endif %}
                 >
-                  {{selected_job_obj.status}}
+                  {{selected_job_obj.job.status}}
                 </dd>
                 
               </div>
-              <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
+              <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/20 px-6 pt-6">
                 <dt class="flex-none">
                   <span class="sr-only">Location</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-6 text-gray-400" aria-hidden="true">
@@ -89,7 +89,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                   </svg>
                 </dt>
-                <dd class="text-sm leading-6 text-gray-500" id='selected_job_location'>{{selected_job_obj.location}}</dd>
+                <dd class="text-sm leading-6 text-gray-500" id='selected_job_location'>{{selected_job_obj.job.location}}</dd>
                 {% comment %} <dd class="text-sm font-medium leading-6 text-gray-900">Alex Curren</dd> {% endcomment %}
               </div>
               <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -101,7 +101,7 @@
                 </dt>
                 <div class='flex w-full flex-wrap' id='qualifications'>
                 {% load qualifications_to_string %}
-                  {% with selected_job_obj.job_required_qualifications.all|qualifications_to_string as qualfications %}
+                  {% with selected_job_obj.job.job_required_qualifications.all|qualifications_to_string as qualfications %}
                     {% for q in qualfications %}
                       <dd class="text-sm leading-6 text-gray-500 rounded-md bg-gray-200 px-2 py-1 text-wrap mb-2 mr-2">{{q}}</dd>
                     {% endfor %}
@@ -117,7 +117,7 @@
                   
                 </dt>
                 <div class='flex w-full flex-wrap' id='skills'>
-                  {% for skill in selected_job_obj.job_required_skills.all %}
+                  {% for skill in selected_job_obj.job.job_required_skills.all %}
                   <dd class="text-sm leading-6 text-gray-700 rounded-md bg-indigo-200 px-2 py-1 text-nowrap mb-2 mr-2">{{skill}}</dd>
                   {% endfor %}
                 </div>
@@ -126,15 +126,15 @@
                 </dd> {% endcomment %}
               </div>
             </dl>
-            <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
-              <a href="{% url 'recruiter-job' selected_job_obj.id %}" class="text-sm font-semibold leading-6 text-gray-900" id='selected_job_link'>More details <span aria-hidden="true">&rarr;</span></a>
+            <div class="mt-6 border-t border-gray-900/20 px-6 py-6">
+              <a href="{% url 'recruiter-job' selected_job_obj.job.id %}" class="text-sm font-semibold leading-6 text-gray-900" id='selected_job_link'>More details <span aria-hidden="true">&rarr;</span></a>
             </div>
           </div>
         </div>
         {% endif %}
         
         <!-- Job -->
-        <div class="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
+        <div class="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/20 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
           <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
               <h1 class="text-base font-semibold leading-6 text-gray-900">Jobs</h1>
@@ -310,15 +310,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    {% for job in page_obj %}
-                    <tr class="even:bg-gray-50 hover:bg-gray-200 cursor-pointer" onClick=setSelectedJobId({{job.id}})>
-                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 w-72 text-wrap">{{job.title}}</td>
-                        <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 w-48 text-wrap">{{job.company}}</td>
-                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">5</td>
-                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">2</td>
-                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">1</td>
+                    {% for job_data in page_obj %}
+                    <tr class="even:bg-gray-50 hover:bg-gray-200 cursor-pointer" onClick=setSelectedJobId({{job_data.job.id}})>
+                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 w-72 text-wrap">{{job_data.job.title}}</td>
+                        <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 w-48 text-wrap">{{job_data.job.company}}</td>
+                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">{{job_data.applied_count}}</td>
+                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">{{job_data.interview_count}}</td>
+                        <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 text-center">{{job_data.accepted_count}}</td>
                         <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <a href="{% url 'update-job' job.id %}" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, AAPS0L</span></a>
+                          <a href="{% url 'update-job' job_data.job.id %}" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, AAPS0L</span></a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -332,7 +332,7 @@
   
         <div class="lg:col-start-3">
           <!-- Applications -->
-          <h1 class="text-base font-semibold leading-6 text-gray-900">Applications</h1>
+          <h1 class="text-base font-semibold leading-6 text-gray-900">Active Applications</h1>
           <div class="mt-8 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -354,24 +354,29 @@
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-200 bg-white">
-                    {% for application in applications %}
+                  <tbody class="divide-y divide-gray-200 bg-white" id='applications'>
+                    {% for application in selected_job_obj.job_applications %}
                     <tr class="even:bg-gray-50">
                       <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                         <div class="flex items-center">
-                          <div class="ml-4">
-                            <div class="font-medium text-gray-900">{{application.candidate}}</div>
-                            <div class="mt-1 text-gray-500">Front-end Developer</div>
+                          <div class="text-wrap">
+                            <div class="font-medium text-gray-900" id='application_candidate'>{{application.candidate}}</div>
+                            <div class="mt-1 text-gray-500">{{application.candidate.experience_belongs_to_candidate.first.job_title}}</div>
                           </div>
                         </div>
                       </td>
-                      <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">95%</td>
+                      <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{{application.application_scorecard.overall_score}}%</td>
                       <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Active</span>
+                        {% if application.status == 'Applied' %}
+                        <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">Applied</span>
+                        {% elif application.status == 'Screening' %}
+                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">Screening</span>
+                        {% elif application.status == 'Interview' %}
+                        <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Interview</span>
+                        {% endif %}
                       </td>
                     </tr>
                     {% endfor %}
-                    <!-- More applications... -->
                   </tbody>
                 </table>
               </div>
