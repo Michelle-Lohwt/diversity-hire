@@ -3,9 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.db.models import Q
 from .decorators import unauthenticated_user, allowed_users
 from .forms import (
   RegistrationForm, CandidateProfileForm, RecruiterProfileForm, CompanyForm,
@@ -16,7 +15,7 @@ from .models import BaseAccount, Candidate, Recruiter, Company
 from ..jobs.models import Job, JobApplication, Scorecard
 from ..jobs.filters import JobFilter, SkillMatchingJobFilter
 from collections import defaultdict
-
+from django.db.models import Q
 
 def home(request):
   return render(request, 'home.html')
@@ -194,23 +193,6 @@ def candidate_dashboard(request):
   
   total_jobs = jobs.count()
   
-  # recommended_jobs = recommend_jobs(candidate_skills, job_data)
-  
-  # recommend_words = {}
-  # for skill in candidate_skills:
-  #   s = str(skill.skill).lower()
-  #   try:
-  #     for w, sim in skill_model.wv.most_similar(s, topn=3):
-  #       recommend_words[w] = sim
-  #   except:
-  #     pass
-  # for title in recommend_words.keys():
-  #   filter = JobFilter({'job_required_skills': title}, queryset=jobs)
-  #   print(len(filter.qs))
-  
-  # ToDo (medium): check whether to include the application that candidates
-  #                 apply in the candidate dashboard
-  # applications = candidate.jobApplication_applied_by_candidate.all()
   context = {
     'page_obj': page_job,
     'filter_query': filtered_dict,
@@ -355,7 +337,8 @@ def get_job_details(request, job_id):
   if request.method == 'GET':
     try:
       job = Job.objects.get(pk=job_id)
-      applications = job.jobApplication_applying_under_job.all()
+      applications = job.jobApplication_applying_under_job.exclude(Q(status='Accepted') | Q(status='Rejected'))
+      
       try:
         q_dict = defaultdict(list)
         for q in job.job_required_qualifications.values():
@@ -379,15 +362,16 @@ def get_job_details(request, job_id):
         application_list = []
         for application in applications:
           application_dict = {
+            'id': application.id,
             'candidate_name': application.candidate.user.name,
             'latest_job_title': application.candidate.experience_belongs_to_candidate.first().job_title,
             'matching_score': application.application_scorecard.overall_score,
             'status': application.status
           }
-        application_list.append(application_dict)
+          application_list.append(application_dict)
       except:
         application_list = None
-        
+      
       job_data = {
           'id': job.pk,
           'title': job.title,

@@ -72,7 +72,8 @@ async function setSelectedJobId(jobId) {
     else{
       data.applications.forEach(a => {
       const row = document.createElement('tr')
-      row.classList.add('even:bg-gray-50')
+      row.classList.add('even:bg-gray-50', 'cursor-pointer')
+      row.onclick = () => navigateApplication(a.id)
 
       const candidateCell = document.createElement('td')
       candidateCell.classList.add('whitespace-nowrap', 'py-5', 'pl-4', 'pr-3', 'text-sm', 'sm:pl-0')
