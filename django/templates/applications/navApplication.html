@@ -1,6 +1,8 @@
-<nav class="-mb-px flex space-x-8">
-  <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-  {% if request.user.candidate_profile %}
+{% load static %}
+
+<!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+{% if request.user.candidate_profile %}
+  <nav class="-mb-px flex space-x-8">
     {% url 'candidate-applied-applications' as view_applied_applications_url %}
     {% if request.path_info == view_applied_applications_url %}
     <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
@@ -35,41 +37,93 @@
     {% else %}
     <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
     {% endif %}
-  {% elif request.user.recruiter_profile %}
-    {% url 'recruiter-job' job.id as view_applied_applications_url %}
-    {% if request.path_info == view_applied_applications_url %}
-    <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
-    {% else %}
-    <a href="{{view_applied_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Applied</a>
-    {% endif %}
+  </nav>
+{% elif request.user.recruiter_profile %}
+  <nav class="-mb-px flex justify-between">
+    <div class="flex space-x-8">
+      {% url 'recruiter-job' job.id as view_applied_applications_url %}
+      {% if request.path_info == view_applied_applications_url %}
+      <a href="{{view_applied_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Applied</a>
+      {% else %}
+      <a href="{{view_applied_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Applied</a>
+      {% endif %}
 
-    {% url 'recruiter-screening-job' job.id as view_screening_applications_url %}
-    {% if request.path_info == view_screening_applications_url %}
-    <a href="{{view_screening_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Screening</a>
-    {% else %}
-    <a href="{{view_screening_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
-    {% endif %}
+      {% url 'recruiter-screening-job' job.id as view_screening_applications_url %}
+      {% if request.path_info == view_screening_applications_url %}
+      <a href="{{view_screening_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Screening</a>
+      {% else %}
+      <a href="{{view_screening_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Screening</a>
+      {% endif %}
 
-    {% url 'recruiter-interview-job' job.id as view_interview_applications_url %}
-    {% if request.path_info == view_interview_applications_url %}
-    <a href="{{view_interview_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Interview</a>
-    {% else %}
-    <a href="{{view_interview_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
-    {% endif %}
+      {% url 'recruiter-interview-job' job.id as view_interview_applications_url %}
+      {% if request.path_info == view_interview_applications_url %}
+      <a href="{{view_interview_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Interview</a>
+      {% else %}
+      <a href="{{view_interview_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Interview</a>
+      {% endif %}
 
-    {% url 'recruiter-accepted-job' job.id as view_accepted_applications_url %}
-    {% if request.path_info == view_accepted_applications_url %}
-    <a href="{{view_accepted_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Accepted</a>
-    {% else %}
-    <a href="{{view_accepted_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
-    {% endif %}
+      {% url 'recruiter-accepted-job' job.id as view_accepted_applications_url %}
+      {% if request.path_info == view_accepted_applications_url %}
+      <a href="{{view_accepted_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Accepted</a>
+      {% else %}
+      <a href="{{view_accepted_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Accepted</a>
+      {% endif %}
 
-    {% url 'recruiter-rejected-job' job.id as view_rejected_applications_url %}
-    {% if request.path_info == view_rejected_applications_url %}
-    <a href="{{view_rejected_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Rejected</a>
-    {% else %}
-    <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
-    {% endif %}
-    
+      {% url 'recruiter-rejected-job' job.id as view_rejected_applications_url %}
+      {% if request.path_info == view_rejected_applications_url %}
+      <a href="{{view_rejected_applications_url}}"  class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Rejected</a>
+      {% else %}
+      <a href="{{view_rejected_applications_url}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Rejected</a>
+      {% endif %}
+    </div>
+      <div class="relative inline-block text-left">
+        <div>
+          <button type="button" id="menu-button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" aria-expanded="true" aria-haspopup="true">
+            Filter
+            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="dropdown-menu" class="hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+          <div class="m-6 space-y-6" role="none">
+            <div class="flex items-center">
+              <input id="menu-item-0" name="score[]" value="skill" type="checkbox" class="h-4 w-4 rounded border-white text-indigo-600 focus:ring-indigo-500" checked>
+              <label for="menu-item-0" class="ml-3 min-w-0 flex-1 text-white">Skill</label>
+            </div>
+            <div class="flex items-center">
+              <input id="menu-item-1" name="score[]" value="qualification" type="checkbox" class="h-4 w-4 rounded border-white text-indigo-600 focus:ring-indigo-500" checked>
+              <label for="menu-item-1" class="ml-3 min-w-0 flex-1 text-white">Qualification</label>
+            </div>
+            <div class="flex items-center">
+              <input id="menu-item-2" name="score[]" value="social_media" type="checkbox" class="h-4 w-4 rounded border-white text-indigo-600 focus:ring-indigo-500" checked>
+              <label for="menu-item-2" class="ml-3 min-w-0 flex-1 text-white">Social Media</label>
+            </div>
+            <div class="flex items-center">
+              <input id="menu-item-3" name="score[]" value="interview_performance" type="checkbox" class="h-4 w-4 rounded border-white text-indigo-600 focus:ring-indigo-500" checked>
+              <label for="menu-item-3" class="ml-3 min-w-0 flex-1 text-white">Interview Performance</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+{% endif %}
+<script>
+  const jobId = {{job.id}}
+  let status = ""
+  {% if request.path_info == view_applied_applications_url %}
+    status = "Applied"
+  {% elif request.path_info == view_screening_applications_url %}
+    status = "Screening"
+  {% elif request.path_info == view_interview_applications_url %}
+    status = "Interview"
+  {% elif request.path_info == view_accepted_applications_url %}
+    status = "Accepted"
+  {% elif request.path_info == view_rejected_applications_url %}
+    status = "Rejected"
   {% endif %}
-</nav>
+</script>
+<script src="{% static 'js/applicationDropdown.js' %}"></script>
+<script src="{% static 'js/rankApplications.js' %}"></script>

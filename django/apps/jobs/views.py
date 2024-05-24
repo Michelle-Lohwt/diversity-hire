@@ -334,3 +334,33 @@ def apply_job(request, job_id):
   scorecard_obj.save()
 
   return JsonResponse({'job_application_id': job_application.pk}, content_type='application/json')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Recruiter'])
+def get_applications(request, job_id, status):
+  if request.method == "GET":
+    applications = JobApplication.objects.filter(job = job_id, status = status)
+    try:
+      application_list = []
+      for application in applications:
+        application_dict = {
+          'id': application.id,
+          'candidate_name': application.candidate.user.name,
+          'latest_job_title': application.candidate.experience_belongs_to_candidate.first().job_title,
+          'company': application.candidate.experience_belongs_to_candidate.first().company_name,
+          'overall_score': application.application_scorecard.overall_score,
+          'skill_score': application.job.job_skill_match.get(candidate=application.candidate).score,
+          'qualification_score': application.application_scorecard.qualification_score,
+          'social_media_score': application.application_scorecard.social_media_score,
+          'interview_score': application.interview_score_application.overall_score
+        }
+        application_list.append(application_dict)
+    except:
+      application_list = None
+      
+    data = {
+      'applications': application_list
+    }
+    return JsonResponse(data, content_type='application/json')
+  else:
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
