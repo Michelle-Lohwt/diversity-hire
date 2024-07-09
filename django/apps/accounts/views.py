@@ -102,7 +102,7 @@ def recruiter_dashboard(request):
     job_applications = job.jobApplication_applying_under_job.all()
     applied_count = job_applications.filter(status = "Applied").count()
     interview_count = job_applications.filter(status = "Interview").count()
-    accepted_count = job_applications.filter(status = "Accept").count()
+    accepted_count = job_applications.filter(status = "Accepted").count()
     job_data.append({
       'job': job,
       'job_applications': job_applications,
@@ -110,7 +110,7 @@ def recruiter_dashboard(request):
       'interview_count': interview_count,
       'accepted_count': accepted_count
     })
-    
+  
   p = Paginator(job_data, 10)
   page_number = request.GET.get('page', 1)
   
@@ -132,10 +132,10 @@ def recruiter_dashboard(request):
   # request.session['job_id'] = selected_job_obj.pk
   total_jobs = jobs.count()
   
-  applied = JobApplication.objects.filter(status='Applied').count()
-  screening = JobApplication.objects.filter(status='Screening').count()
-  interview = JobApplication.objects.filter(status='Interview').count()
-  accepted = JobApplication.objects.filter(status='Accepted').count()
+  applied = JobApplication.objects.filter(status='Applied', job__created_by=recruiter).count()
+  screening = JobApplication.objects.filter(status='Screening', job__created_by=recruiter).count()
+  interview = JobApplication.objects.filter(status='Interview', job__created_by=recruiter).count()
+  accepted = JobApplication.objects.filter(status='Accepted', job__created_by=recruiter).count()
   
   context = {
     'recruiter': recruiter,

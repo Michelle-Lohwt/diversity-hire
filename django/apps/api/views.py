@@ -137,7 +137,7 @@ def calculate_qualification_matching(candidate, job):
         min_job_qualification = job_q_types[0].lower()
         min_job_qualification_level = qualification_levels[min_job_qualification]
         
-        level_diff = max_candidate_qualification_level - min_job_qualification_level
+        level_diff = abs(max_candidate_qualification_level - min_job_qualification_level)
         
         # Case 3.1: All candidate qualification types are lower than the required job qualification types
         if level_diff < 0:
@@ -224,9 +224,7 @@ def calculate_sentiment_score(candidate):
       text = remove_unnecessary_characters(post)
       sentiment_score = analyzer.polarity_scores(text)
       total_compound_score += sentiment_score['compound']
-    
-  
-      avg_compound_score = total_compound_score/len(content)
+    avg_compound_score = total_compound_score/len(content)
   except:
     avg_compound_score = 0
     

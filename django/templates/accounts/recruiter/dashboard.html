@@ -312,6 +312,7 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white" id='applications'>
                     {% for application in selected_job_obj.job_applications %}
+                    {% if application.status != 'Accepted' and application.status != 'Rejected' %}
                     <tr class="even:bg-gray-50 cursor-pointer" onClick=navigateApplication({{application.id}})>
                       <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                         <div class="flex items-center">
@@ -332,6 +333,7 @@
                         {% endif %}
                       </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                   </tbody>
                 </table>
